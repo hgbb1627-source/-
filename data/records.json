@@ -908,13 +908,13 @@
       "admission": "가천의약학전형",
       "major": "의예과",
       "quota": 16,
-      "applicants": 448,
-      "diff": 0,
-      "rate": 28.0,
-      "rate_str": "28.0 : 1",
+      "applicants": 449,
+      "diff": 1,
+      "rate": 28.1,
+      "rate_str": "28.1 : 1",
       "prev_year": "40.0 : 1",
-      "progress_pct": 70.0,
-      "latest_time": "03:00",
+      "progress_pct": 70.2,
+      "latest_time": "03:10",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -1372,6 +1372,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 448,
           "rate": 28.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 449,
+          "rate": 28.1
         }
       ]
     },
@@ -3789,7 +3796,7 @@
       "rate_str": "35.9 : 1",
       "prev_year": "50.0 : 1",
       "progress_pct": 71.8,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -4245,6 +4252,13 @@
           "date": "2026-09-11",
           "time": "03:00",
           "datetime_label": "09-11 03:00",
+          "applicants": 359,
+          "rate": 35.9
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
           "applicants": 359,
           "rate": 35.9
         }
