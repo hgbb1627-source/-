@@ -754,6 +754,7 @@ def update_readme(fetched_list):
 def git_commit_and_push(latest_time_str):
     """Git 변경사항 커밋 및 푸시"""
     import subprocess
+    import time
     msg = f"Update admission records automatically ({datetime.date.today().strftime('%Y-%m-%d')} {latest_time_str})"
     print(f"\n[Git 동기화] 커밋 및 푸시 진행 중: '{msg}'")
     try:
@@ -767,8 +768,29 @@ def git_commit_and_push(latest_time_str):
             ["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=BASE_DIR,
             capture_output=True, text=True, check=True
         ).stdout.strip()
-        subprocess.run(["git", "push", "origin", branch], cwd=BASE_DIR, check=True)
-        print(f"  ✓ GitHub 푸시 완료! ({branch} 브랜치)")
+
+        # 푸시 전에 원격 변경사항을 먼저 병합해야 함.
+        # (GitHub Actions나 다른 PC가 먼저 커밋해 두면 그냥 push는 "fetch first" 오류로 영구히 막힘)
+        # 충돌 시에는 -X ours 로 방금 수집한 로컬 데이터를 우선한다.
+        # 원격에만 있는 다른 파일(index.html 등) 변경은 정상적으로 병합되어 들어온다.
+        for attempt in range(3):
+            try:
+                subprocess.run(["git", "fetch", "origin", branch], cwd=BASE_DIR, check=True)
+                merge = subprocess.run(
+                    ["git", "merge", "-X", "ours", "--no-edit", f"origin/{branch}"],
+                    cwd=BASE_DIR, capture_output=True, text=True
+                )
+                if merge.returncode != 0:
+                    print(f"  [Git 알림] 병합 경고: {merge.stdout.strip()} {merge.stderr.strip()}")
+                    subprocess.run(["git", "merge", "--abort"], cwd=BASE_DIR)
+                subprocess.run(["git", "push", "origin", branch], cwd=BASE_DIR, check=True)
+                print(f"  ✓ GitHub 푸시 완료! ({branch} 브랜치)")
+                return
+            except subprocess.CalledProcessError as e:
+                if attempt == 2:
+                    raise
+                print(f"  [Git 재시도 {attempt + 1}/2] 푸시 실패, 원격 변경사항 다시 받아서 재시도합니다...")
+                time.sleep(3)
     except Exception as e:
         print(f"  [Git 오류] Git 작업 실패: {e}")
 
