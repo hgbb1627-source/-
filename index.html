@@ -190,9 +190,9 @@
       <div class="apple-card p-5">
         <div class="text-[12px] text-apple-muted font-medium mb-1">관리 대학</div>
         <div class="text-[28px] font-semibold tracking-tight text-apple-ink">
-          9<span class="text-[15px] font-normal text-apple-muted ml-1">개교</span>
+          11<span class="text-[15px] font-normal text-apple-muted ml-1">개교</span>
         </div>
-        <div class="text-[11px] text-apple-muted mt-1">선정 6 + 모니터링 3</div>
+        <div class="text-[11px] text-apple-muted mt-1">선정 6 + 모니터링 5</div>
       </div>
 
       <div class="apple-card p-5">
@@ -200,7 +200,7 @@
         <div id="metric-top6-applicants" class="text-[28px] font-semibold tracking-tight text-apple-blue">
           --<span class="text-[15px] font-normal text-apple-muted ml-1">명</span>
         </div>
-        <div id="metric-top6-quota" class="text-[11px] text-apple-muted mt-1">총 모집정원 53명</div>
+        <div id="metric-top6-quota" class="text-[11px] text-apple-muted mt-1">총 모집정원 113명</div>
       </div>
 
       <div class="apple-card p-5">
@@ -345,7 +345,7 @@
       <div class="pt-4 border-t border-apple-hairline flex flex-col md:flex-row items-center justify-between text-[11px] text-apple-mutedLight gap-2">
         <div>Copyright © 2027 수시 경쟁률 예측 프로그램. All rights reserved.</div>
         <div class="flex items-center space-x-4">
-          <span>단국대 · 동덕여대 · 전남대 · 한남대 · 백석대 · 서울여대</span>
+          <span>전북대 · 가천대 · 원광대 · 성균관대 · 한양대(ERICA)</span>
         </div>
       </div>
     </div>
@@ -358,15 +358,17 @@
 
     // Apple Curated Color Palette for Charts
     const APPLE_CHART_COLORS = [
-      '#0071e3', // Action Blue (단국대)
-      '#bf4800', // Rust/Orange (동덕여대)
-      '#107c41', // Forest Green (전남대)
-      '#6e5494', // Purple (한남대)
-      '#008299', // Cyan/Teal (백석대)
-      '#d9383a', // Red (서울여대)
-      '#86868b', // Space Gray (가톨릭대)
-      '#e3a008', // Amber (충남대)
-      '#343a40'  // Midnight (경기대)
+      '#0071e3', // Action Blue (전북대-지역의사전주권)
+      '#bf4800', // Rust/Orange (전북대-지역인재2전북권)
+      '#107c41', // Forest Green (가천대-의예과)
+      '#6e5494', // Purple (원광대-의약학치의예과)
+      '#008299', // Cyan/Teal (성균관대-약학과)
+      '#d9383a', // Red (한양대ERICA-약학과)
+      '#86868b', // Space Gray (전북대-지역인재2유형)
+      '#e3a008', // Amber (전북대-지역의사광역권)
+      '#343a40', // Midnight (원광대-지역의사전주권)
+      '#ff6482', // Pink (원광대-지역의사광역권)
+      '#34c759'  // Green (가천대-약학과)
     ];
 
     async function loadData(manual = false) {
@@ -510,14 +512,16 @@
                 </div>
               </div>
 
-              <!-- Progress bar against previous year -->
+              <!-- Progress bar against previous year (전년도 데이터가 없으면 % 대신 안내 문구만 표시) -->
               <div class="mt-4">
                 <div class="flex justify-between text-[12px] text-apple-muted mb-1.5">
                   <span>전년도(2026) ${u.prev_year}</span>
-                  <span class="font-medium text-apple-ink">${u.progress_pct}%</span>
+                  ${u.progress_pct !== null && u.progress_pct !== undefined
+                    ? `<span class="font-medium text-apple-ink">${u.progress_pct}%</span>`
+                    : `<span class="font-normal text-apple-mutedLight">비교 불가</span>`}
                 </div>
                 <div class="w-full h-1.5 rounded-full bg-apple-hairline overflow-hidden">
-                  <div class="h-full rounded-full bg-apple-blue transition-all duration-700" style="width: ${Math.min(u.progress_pct, 100)}%"></div>
+                  <div class="h-full rounded-full bg-apple-blue transition-all duration-700" style="width: ${u.progress_pct !== null && u.progress_pct !== undefined ? Math.min(u.progress_pct, 100) : 0}%"></div>
                 </div>
               </div>
             </div>
