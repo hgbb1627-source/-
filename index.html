@@ -305,7 +305,7 @@
           대학별 종합 비교
         </h2>
         <p class="text-[12px] text-apple-muted mt-0.5">
-          실시간 접수 결과 및 5개년 입시 통계 지표
+          실시간 접수 결과 및 전년도 입시 통계 지표
         </p>
       </div>
 
@@ -322,8 +322,6 @@
               <th class="py-3 px-3 text-center whitespace-nowrap">지원자</th>
               <th class="py-3 px-4 text-center font-semibold text-apple-ink whitespace-nowrap">현재 경쟁률</th>
               <th class="py-3 px-3 text-center whitespace-nowrap">전년도(2026)</th>
-              <th class="py-3 px-3 text-center whitespace-nowrap">5개년 최소</th>
-              <th class="py-3 px-3 text-center whitespace-nowrap">5개년 평균</th>
               <th class="py-3 px-4 text-center whitespace-nowrap">공식접수처</th>
             </tr>
           </thead>
@@ -527,8 +525,7 @@
             </div>
 
             <!-- Footer Link: Apple Text Link with Arrow -->
-            <div class="mt-6 pt-3.5 border-t border-apple-hairline flex items-center justify-between text-[12px]">
-              <span class="text-apple-muted">5개년 평균: <strong class="text-apple-ink font-medium">${u.avg_5yr}</strong></span>
+            <div class="mt-6 pt-3.5 border-t border-apple-hairline flex items-center justify-end text-[12px]">
               <a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-apple-blue hover:text-apple-blueHover font-medium flex items-center gap-1 group">
                 <span>원문 보기</span>
                 <i class="fa-solid fa-chevron-right text-[9px] transition-transform group-hover:translate-x-0.5"></i>
@@ -563,8 +560,6 @@
           <td class="py-3.5 px-3 text-center font-semibold text-apple-ink whitespace-nowrap">${u.applicants}</td>
           <td class="py-3.5 px-4 text-center font-semibold text-apple-blue text-[14px] whitespace-nowrap">${u.rate_str}</td>
           <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.prev_year}</td>
-          <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.min_5yr}</td>
-          <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.avg_5yr}</td>
           <td class="py-3.5 px-4 text-center whitespace-nowrap">
             <a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-apple-blue hover:text-apple-blueHover text-[12px] inline-flex items-center gap-1 font-medium whitespace-nowrap">
               <span>조회</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>

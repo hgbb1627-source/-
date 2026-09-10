@@ -63,8 +63,6 @@ UNIV_CONFIGS = [
         "major": "의예과",
         "quota": 9,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -80,8 +78,6 @@ UNIV_CONFIGS = [
         "major": "의예과",
         "quota": 45,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -97,8 +93,6 @@ UNIV_CONFIGS = [
         "major": "의예과",
         "quota": 16,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -114,8 +108,6 @@ UNIV_CONFIGS = [
         "major": "의약학 치의예과 (자연)",
         "quota": 18,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
         "enc": "euc-kr",
         "type": "uway",
@@ -131,8 +123,6 @@ UNIV_CONFIGS = [
         "major": "약학과",
         "quota": 10,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10920591.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -148,8 +138,6 @@ UNIV_CONFIGS = [
         "major": "약학과",
         "quota": 15,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -165,8 +153,6 @@ UNIV_CONFIGS = [
         "major": "의예과",
         "quota": 4,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -182,8 +168,6 @@ UNIV_CONFIGS = [
         "major": "의예과",
         "quota": 6,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -200,8 +184,6 @@ UNIV_CONFIGS = [
         "major": "의예과 (추정)",
         "quota": 7,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
         "enc": "euc-kr",
         "type": "uway",
@@ -218,8 +200,6 @@ UNIV_CONFIGS = [
         "major": "의예과 (추정)",
         "quota": 4,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
         "enc": "euc-kr",
         "type": "uway",
@@ -235,8 +215,6 @@ UNIV_CONFIGS = [
         "major": "약학과",
         "quota": 10,
         "prev_year": "데이터 없음",
-        "min_5yr": "데이터 없음",
-        "avg_5yr": "데이터 없음",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -589,8 +567,6 @@ def export_records_json(fetched_list):
             "rate_str": f"{cur_rate:.2f} : 1",
             "prev_year": cfg["prev_year"],
             "progress_pct": progress_pct,
-            "min_5yr": cfg["min_5yr"],
-            "avg_5yr": cfg["avg_5yr"],
             "latest_time": cur_t_str,
             "url": cfg["url"],
             "history": history
@@ -637,18 +613,16 @@ def update_readme(fetched_list):
         rate = round(app / quota, 2)
 
         prev_yr_str = cfg["prev_year"]
-        min_5yr_str = cfg["min_5yr"]
-        avg_5yr_str = cfg["avg_5yr"]
 
         if "지원" in cat:
-            row_line = f"| **{cat}** | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} | {min_5yr_str} | {avg_5yr_str} |"
+            row_line = f"| **{cat}** | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} |"
         else:
-            row_line = f"| {cat} | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} | {min_5yr_str} | {avg_5yr_str} |"
+            row_line = f"| {cat} | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} |"
         rows_text.append(row_line)
 
     new_table = f"### 📊 종합비교 대시보드 실시간 현황 ({now_date_str} {latest_time_str} 기준)\n\n"
-    new_table += "| 구분 | 발표시간 | 대학명 | 전형명 | 모집단위 | 모집정원 | 최신 지원자 | 현재 경쟁률 | 전년도 경쟁률 (2026) | 5개년 최소 | 5개년 평균 |\n"
-    new_table += "| :---: | :---: | :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |\n"
+    new_table += "| 구분 | 발표시간 | 대학명 | 전형명 | 모집단위 | 모집정원 | 최신 지원자 | 현재 경쟁률 | 전년도 경쟁률 (2026) |\n"
+    new_table += "| :---: | :---: | :--- | :--- | :--- | :---: | :---: | :---: | :---: |\n"
     new_table += "\n".join(rows_text) + "\n"
 
     pattern = r"### 📊 종합비교 대시보드 실시간 현황.*?(?=\n---\n|\n##|\Z)"

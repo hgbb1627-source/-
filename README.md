@@ -7,20 +7,19 @@
 ## 📁 포함된 파일 구성
 
 1. **index.html**: Apple 디자인 모바일/PC 반응형 실시간 대시보드 (Chart.js 시계열 차트 내장)
-2. **uto_fetch_competition.py**: 6~9개 대학 실시간 경쟁률 자동 스크래핑 및 엑셀/JSON 동기화 엔진
-3. **pi/refresh.py**: Vercel 웹에서 '새로고침' 클릭 시 즉시 실시간 크롤링을 수행하는 서버리스 함수
-4. **ercel.json**: Vercel 배포 설정 (서울 리전 icn1, 캐시 방지)
-5. **
-equirements.txt**: 서버리스 함수용 파이썬 의존성 (beautifulsoup4)
+2. **auto_fetch_competition.py**: 6~9개 대학 실시간 경쟁률 자동 스크래핑 및 엑셀/JSON 동기화 엔진
+3. **api/refresh.py**: Vercel 웹에서 '새로고침' 클릭 시 즉시 실시간 크롤링을 수행하는 서버리스 함수
+4. **vercel.json**: Vercel 배포 설정 (서울 리전 icn1, 캐시 방지)
+5. **requirements.txt**: 서버리스 함수용 파이썬 의존성 (beautifulsoup4)
 6. **.github/workflows/update_competition.yml**: GitHub Actions 정기 자동 수집 워크플로우
 
 ---
 
 ## ⚙️ 내 자녀 대학으로 변경하는 방법 (딱 1곳!)
 
-uto_fetch_competition.py와 pi/refresh.py 상단의 **UNIV_CONFIGS** 목록을 자녀의 목표 대학 6개로 수정합니다:
+auto_fetch_competition.py와 api/refresh.py 상단의 **UNIV_CONFIGS** 목록을 자녀의 목표 대학 6개로 수정합니다:
 
-`python
+```python
 UNIV_CONFIGS = [
     {
         'category': '지원 1',                     # '지원 1' ~ '지원 6'
@@ -30,9 +29,7 @@ UNIV_CONFIGS = [
         'admission': '학교추천',                  # 전형명
         'major': '경영대학',                      # 모집단위(학과)
         'quota': 45,                             # 모집정원 (숫자)
-        'prev_year': '12.50 : 1',                # 전년도(2026) 경쟁률
-        'min_5yr': '8.20 : 1',                   # 5개년 최저
-        'avg_5yr': '11.40 : 1',                  # 5개년 평균
+        'prev_year': '12.50 : 1',                # 전년도(2026) 경쟁률 (없으면 '데이터 없음')
         'url': 'http://ratio.uwayapply.com/...', # 진학사 또는 유웨이 실시간 경쟁률 URL
         'enc': 'euc-kr',                         # 유웨이는 euc-kr, 진학사는 utf-8
         'type': 'uway',                          # 'uway' 또는 'jinhak'
@@ -41,7 +38,7 @@ UNIV_CONFIGS = [
     },
     # ... 총 6개 등록
 ]
-`
+```
 
 ---
 
