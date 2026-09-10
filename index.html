@@ -16,9 +16,6 @@
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Chart.js CDN & Date Adapter -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 
   <script>
     tailwind.config = {
@@ -241,47 +238,6 @@
       </div>
     </section>
 
-    <!-- 5. Section: 시간대별 접수 추이 인터랙티브 차트 -->
-    <section class="apple-card p-6 md:p-8">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-apple-hairline">
-        <div>
-          <h2 id="chart-section-title" class="text-[19px] md:text-[21px] font-semibold text-apple-ink tracking-tight">
-            시간대별 지원 추이
-          </h2>
-          <p id="chart-section-desc" class="text-[13px] text-apple-muted mt-0.5">
-            지원자 수(명) 및 실시간 경쟁률(:1) 전환 선택 가능
-          </p>
-        </div>
-
-        <!-- Dual Apple Segmented Controls (지표 선택 & 대학 범위 선택) -->
-        <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
-          <!-- 1. 지표 스위처: 지원자 수 vs 실시간 경쟁률 -->
-          <div class="inline-flex bg-apple-parchment p-1 rounded-apple-pill border border-apple-hairline shadow-inner">
-            <button onclick="setChartMetric('applicants')" id="btn-metric-applicants" class="px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition">
-              지원자 수 (명)
-            </button>
-            <button onclick="setChartMetric('rate')" id="btn-metric-rate" class="px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition">
-              실시간 경쟁률 (:1)
-            </button>
-          </div>
-
-          <!-- 2. 대학 범위 스위처: 선정 6개 vs 전체 9개 -->
-          <div class="inline-flex bg-apple-parchment p-1 rounded-apple-pill border border-apple-hairline shadow-inner">
-            <button onclick="filterChartScope('selected6')" id="btn-chart-sel6" class="px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition">
-              선정 6개
-            </button>
-            <button onclick="filterChartScope('all')" id="btn-chart-all" class="px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition">
-              전체 9개
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="relative h-[320px] md:h-[400px] w-full">
-        <canvas id="trendChart"></canvas>
-      </div>
-    </section>
-
     <!-- 6. Section: 기타 모니터링 3개 대학 -->
     <section>
       <div class="mb-4">
@@ -352,22 +308,6 @@
   <!-- Client JavaScript Logic -->
   <script>
     let rawData = null;
-    let chartInstance = null;
-
-    // Apple Curated Color Palette for Charts
-    const APPLE_CHART_COLORS = [
-      '#0071e3', // Action Blue (전북대-지역의사전주권)
-      '#bf4800', // Rust/Orange (전북대-지역인재2전북권)
-      '#107c41', // Forest Green (가천대-의예과)
-      '#6e5494', // Purple (원광대-의약학치의예과)
-      '#008299', // Cyan/Teal (성균관대-약학과)
-      '#d9383a', // Red (한양대ERICA-약학과)
-      '#86868b', // Space Gray (전북대-지역인재2유형)
-      '#e3a008', // Amber (전북대-지역의사광역권)
-      '#343a40', // Midnight (원광대-지역의사전주권)
-      '#ff6482', // Pink (원광대-지역의사광역권)
-      '#34c759'  // Green (가천대-약학과)
-    ];
 
     async function loadData(manual = false) {
       const btn = document.getElementById('refresh-btn');
@@ -455,9 +395,6 @@
 
       // 3. 테이블 렌더링
       renderTable('summary-table-body', univs);
-
-      // 4. 차트 렌더링
-      renderChart(univs);
     }
 
     function renderCards(containerId, list, isHighlight) {
@@ -568,198 +505,6 @@
         `;
         tbody.appendChild(tr);
       });
-    }
-
-    let currentMetric = 'applicants'; // 'applicants' | 'rate'
-    let currentScope = 'selected6';   // 'selected6' | 'all'
-
-    function renderChart(univs) {
-      if (!univs) return;
-      const isRate = currentMetric === 'rate';
-
-      const datasets = univs.map((u, i) => {
-        const color = APPLE_CHART_COLORS[i % APPLE_CHART_COLORS.length];
-        
-        // 각 대학의 실제 발표 시각(Time Weight)을 x축 밀리초 타임스탬프로 변환
-        const points = [];
-        if (u.history && u.history.length > 0) {
-          u.history.forEach(h => {
-            if (h.date && h.time) {
-              const dateStr = `${h.date.replace(/-/g, '/')} ${h.time}:00`;
-              const ts = new Date(dateStr).getTime();
-              if (!isNaN(ts)) {
-                points.push({
-                  x: ts,
-                  y: isRate ? h.rate : h.applicants
-                });
-              }
-            }
-          });
-          // 시간순 정렬
-          points.sort((a, b) => a.x - b.x);
-        }
-
-        const isOther = u.category.startsWith('기타');
-        const isHidden = (currentScope === 'selected6') && isOther;
-
-        return {
-          label: isRate ? `${u.alias} (${u.rate_str})` : `${u.alias} (${u.quota}명)`,
-          data: points,
-          borderColor: color,
-          backgroundColor: color,
-          borderWidth: isOther ? 1.5 : 2.5,
-          borderDash: isOther ? [4, 4] : [],
-          tension: 0.15,
-          pointRadius: 3.5,
-          pointHoverRadius: 6.5,
-          hidden: isHidden
-        };
-      });
-
-      const ctx = document.getElementById('trendChart').getContext('2d');
-      if (chartInstance) {
-        chartInstance.destroy();
-      }
-
-      chartInstance = new Chart(ctx, {
-        type: 'line',
-        data: {
-          datasets: datasets
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            mode: 'nearest',
-            axis: 'x',
-            intersect: false
-          },
-          plugins: {
-            legend: {
-              position: 'top',
-              labels: {
-                color: '#1d1d1f',
-                font: { family: '-apple-system, BlinkMacSystemFont, Pretendard, sans-serif', size: 12 },
-                boxWidth: 10,
-                padding: 16,
-                usePointStyle: true
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(29, 29, 31, 0.95)',
-              titleColor: '#ffffff',
-              bodyColor: '#e5e5e7',
-              borderColor: 'rgba(255, 255, 255, 0.1)',
-              borderWidth: 1,
-              padding: 12,
-              boxPadding: 4,
-              cornerRadius: 10,
-              bodyFont: { family: '-apple-system, BlinkMacSystemFont, Pretendard, sans-serif', size: 12 },
-              callbacks: {
-                title: function(context) {
-                  if (!context || !context.length) return '';
-                  const d = new Date(context[0].parsed.x);
-                  const m = String(d.getMonth() + 1).padStart(2, '0');
-                  const day = String(d.getDate()).padStart(2, '0');
-                  const h = String(d.getHours()).padStart(2, '0');
-                  const min = String(d.getMinutes()).padStart(2, '0');
-                  return `${m}/${day} ${h}:${min} 발표 시점`;
-                },
-                label: function(context) {
-                  const val = context.parsed.y;
-                  if (val === null || val === undefined) return '';
-                  const shortName = context.dataset.label.split(' ')[0];
-                  return isRate ? ` ${shortName}: ${val.toFixed(2)} : 1` : ` ${shortName}: ${val}명`;
-                }
-              }
-            }
-          },
-          scales: {
-            x: {
-              type: 'time',
-              time: {
-                unit: 'hour',
-                stepSize: 2,
-                displayFormats: {
-                  hour: 'MM/dd HH:mm',
-                  minute: 'HH:mm'
-                }
-              },
-              grid: { color: 'rgba(0, 0, 0, 0.04)' },
-              ticks: { 
-                color: '#86868b', 
-                font: { size: 11 },
-                maxRotation: 0,
-                autoSkip: true
-              },
-              title: {
-                display: true,
-                text: '발표 일시 (Time-Weighted)',
-                color: '#86868b',
-                font: { size: 11 }
-              }
-            },
-            y: {
-              grid: { color: 'rgba(0, 0, 0, 0.04)' },
-              ticks: { 
-                color: '#86868b', 
-                font: { size: 11 },
-                callback: function(val) {
-                  return isRate ? `${val}:1` : `${val}명`;
-                }
-              },
-              title: {
-                display: true,
-                text: isRate ? '실시간 경쟁률 (:1)' : '누적 지원자 수 (명)',
-                color: '#86868b',
-                font: { size: 12 }
-              }
-            }
-          }
-        }
-      });
-    }
-
-    function setChartMetric(metric) {
-      currentMetric = metric;
-      const btnApp = document.getElementById('btn-metric-applicants');
-      const btnRate = document.getElementById('btn-metric-rate');
-      const title = document.getElementById('chart-section-title');
-      const desc = document.getElementById('chart-section-desc');
-
-      if (metric === 'rate') {
-        btnRate.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
-        btnApp.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
-        title.innerText = '시간대별 실시간 경쟁률 추이';
-        desc.innerText = '모집정원 대비 실시간 경쟁률(:1) 변화 흐름';
-      } else {
-        btnApp.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
-        btnRate.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
-        title.innerText = '시간대별 누적 지원자 추이';
-        desc.innerText = '대학별 시간대별 누적 지원 인원(명) 변화 흐름';
-      }
-
-      if (rawData && rawData.universities) {
-        renderChart(rawData.universities);
-      }
-    }
-
-    function filterChartScope(scope) {
-      currentScope = scope;
-      const btnSel6 = document.getElementById('btn-chart-sel6');
-      const btnAll = document.getElementById('btn-chart-all');
-
-      if (scope === 'selected6') {
-        btnSel6.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
-        btnAll.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
-      } else {
-        btnAll.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
-        btnSel6.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
-      }
-
-      if (rawData && rawData.universities) {
-        renderChart(rawData.universities);
-      }
     }
 
     // 30분마다 자동 새로고침 (1,800,000ms)
