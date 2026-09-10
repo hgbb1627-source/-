@@ -265,6 +265,112 @@ def _fetch_html_with_session(url, timeout=10):
     with opener.open(req, timeout=timeout) as resp:
         return resp.read()
 
+def _extract_from_cells(cells, cfg, major_idx=None):
+    """표의 한 행(cells)에서 모집정원 위치를 찾아 지원인원/경쟁률을 뽑아낸다"""
+    q_str = str(cfg["quota"])
+    q_idx = None
+    if q_str in cells:
+        q_idx = cells.index(q_str)
+    elif major_idx is not None and major_idx + 1 < len(cells) and cells[major_idx + 1].isdigit():
+        q_idx = major_idx + 1
+    else:
+        nums = [c for c in cells if c.isdigit()]
+        if len(nums) >= 2:
+            q_idx = cells.index(nums[-2])
+    if q_idx is None:
+        return None
+    if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
+        app = int(cells[q_idx + 1])
+        rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
+        return {"applicants": app, "rate_str": rate_str}
+    return None
+
+
+def _candidate_tables(soup, target_adm):
+    """전형명이 '표 제목'에 있는 표를 최우선, '표 안'에만 있는 표를 차선으로 정렬해서 반환"""
+    scored = []
+    for table in soup.find_all("table"):
+        headers = []
+        curr = table
+        while curr and len(headers) < 4:
+            curr = curr.find_previous(["h1", "h2", "h3", "h4", "caption", "div", "span", "p"])
+            if curr:
+                t = curr.get_text().strip()
+                if any(k in t for k in ["전형", "모집", "현황", "경쟁률"]) and len(t) < 60:
+                    headers.append(t)
+        header_text = " ".join(headers)
+        if not target_adm:
+            scored.append((1, table))
+            continue
+        if target_adm in header_text:
+            scored.append((2, table))
+            continue
+        first_col = " ".join(
+            [tr.find(["td", "th"]).get_text() for tr in table.find_all("tr") if tr.find(["td", "th"])]
+        )
+        if target_adm in first_col:
+            scored.append((1, table))
+    scored.sort(key=lambda x: -x[0])
+    return [t for _, t in scored]
+
+
+def _rows_of(table):
+    for tr in table.find_all("tr"):
+        yield [td.get_text().strip() for td in tr.find_all(["td", "th"])]
+
+
+def find_matched_row(soup, cfg):
+    """모집단위 셀 '정확 일치'를 최우선으로 하는 단계별 매칭.
+
+    주의: 단순 부분일치(예: '약학과' in '학생부종합(초기계약 계약학과)')는
+    엉뚱한 전형 요약 행을 잡아 잘못된 지원자 수를 가져오므로,
+    셀 단위 정확 일치 -> 정원 일치 -> 부분일치 순서로 좁혀 나간다.
+    """
+    target_adm = cfg["target_admission_match"]
+    target_maj = cfg["target_major_match"]
+    q_str = str(cfg["quota"])
+    tables = _candidate_tables(soup, target_adm)
+
+    # 1순위: 모집단위 셀 정확 일치 + 같은 행에 모집정원 숫자 존재
+    for table in tables:
+        for cells in _rows_of(table):
+            if target_maj in cells and q_str in cells:
+                row = _extract_from_cells(cells, cfg, cells.index(target_maj))
+                if row:
+                    return row
+
+    # 2순위: 모집단위 셀 정확 일치 (정원 표기가 다른 경우 대비)
+    for table in tables:
+        for cells in _rows_of(table):
+            if target_maj in cells:
+                row = _extract_from_cells(cells, cfg, cells.index(target_maj))
+                if row:
+                    return row
+
+    # 3순위: 모집단위 부분 일치 + 같은 행에 모집정원 숫자 존재
+    for table in tables:
+        for cells in _rows_of(table):
+            if any(target_maj in c for c in cells) and q_str in cells:
+                row = _extract_from_cells(cells, cfg, None)
+                if row:
+                    return row
+
+    # 4순위(최후): 전형명으로 표를 좁히지 않고 전체 표에서 모집단위+정원 일치 탐색
+    for table in soup.find_all("table"):
+        for cells in _rows_of(table):
+            if target_maj in cells and q_str in cells:
+                row = _extract_from_cells(cells, cfg, cells.index(target_maj))
+                if row:
+                    return row
+    for table in soup.find_all("table"):
+        for cells in _rows_of(table):
+            if any(target_maj in c for c in cells) and q_str in cells:
+                row = _extract_from_cells(cells, cfg, None)
+                if row:
+                    return row
+    return None
+
+
 def fetch_single_university(cfg):
     """단일 대학 웹페이지를 스크래핑하여 최신 수치 딕셔너리 반환"""
     try:
@@ -278,71 +384,7 @@ def fetch_single_university(cfg):
         
         date_obj, time_obj = parse_time_from_soup(soup)
         
-        target_adm = cfg["target_admission_match"]
-        target_maj = cfg["target_major_match"]
-        
-        matched_row = None
-        for table in soup.find_all("table"):
-            headers = []
-            curr = table
-            while curr and len(headers) < 4:
-                curr = curr.find_previous(["h1", "h2", "h3", "h4", "caption", "div", "span", "p"])
-                if curr:
-                    t = curr.get_text().strip()
-                    if any(k in t for k in ["전형", "모집", "현황", "경쟁률"]) and len(t) < 60:
-                        headers.append(t)
-            header_text = " ".join(headers)
-
-            if target_adm and target_adm not in header_text:
-                table_first_col = " ".join(
-                    [tr.find(["td", "th"]).get_text() for tr in table.find_all("tr") if tr.find(["td", "th"])]
-                )
-                if target_adm not in table_first_col:
-                    continue
-
-            for tr in table.find_all("tr"):
-                cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
-                row_str = " ".join(cells)
-                if target_maj in row_str:
-                    nums = [c for c in cells if c.isdigit()]
-                    if len(nums) >= 2:
-                        q_str = str(cfg["quota"])
-                        if q_str in cells:
-                            q_idx = cells.index(q_str)
-                        else:
-                            q_idx = cells.index(nums[-2])
-                        
-                        if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
-                            app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
-                            matched_row = {
-                                "applicants": app,
-                                "rate_str": rate_str
-                            }
-                            break
-            if matched_row:
-                break
-
-        # 1차 매칭 실패 시: 전형명(target_adm)으로 표를 좁히지 않고, 모집단위명 + 정원 숫자
-        # 일치만으로 전체 표를 다시 훑는 완화된 2차 매칭 (한 URL에 여러 전형이 섞여 있어
-        # 전형명 문구가 실제 페이지와 미세하게 달라 표 단계에서 걸러지는 경우를 구제)
-        if not matched_row:
-            q_str = str(cfg["quota"])
-            for table in soup.find_all("table"):
-                for tr in table.find_all("tr"):
-                    cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
-                    row_str = " ".join(cells)
-                    if target_maj in row_str and q_str in cells:
-                        q_idx = cells.index(q_str)
-                        if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
-                            app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
-                            matched_row = {"applicants": app, "rate_str": rate_str}
-                            break
-                if matched_row:
-                    break
-            if matched_row:
-                print(f"[알림] [{cfg['alias']}] 완화된 2차 매칭으로 찾음 (target_admission_match 확인 권장)")
+        matched_row = find_matched_row(soup, cfg)
 
         if not matched_row:
             print(f"[경고] [{cfg['alias']}] 타겟 학과/전형 행 매칭 실패")
