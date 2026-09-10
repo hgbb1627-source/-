@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 수시 실시간 경쟁률 자동 수집 및 동기화 시스템 (Auto Fetch Competition Tool)
-- 9개 대상 대학(지원 6개, 모니터링 3개)의 실시간 경쟁률 웹페이지(유웨이/진학사)를 자동 파싱
+- 11개 대상 전형(지원 6개, 모니터링 5개)의 실시간 경쟁률 웹페이지(유웨이/진학사)를 자동 파싱
 - 새로운 발표 기준시각 또는 인원 변동 시 엑셀 파일(로컬 및 Google Drive)에 자동 행 추가
 - 웹앱용 정형 데이터(data/records.json) 자동 추출 및 동기화
 - README.md 종합비교 대시보드 실시간 테이블 자동 갱신
@@ -377,12 +377,40 @@ def get_current_excel_last_records():
             last_records[cfg["alias"]] = None
     return last_records
 
+def get_current_json_last_records():
+    """data/records.json에서 각 대학의 가장 최근 기록 읽기 (엑셀이 없는 환경용 폴백)"""
+    if not os.path.exists(JSON_PATH):
+        return {}
+    try:
+        with open(JSON_PATH, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except Exception:
+        return {}
+    last_records = {}
+    for u in existing.get("universities", []):
+        history = u.get("history", [])
+        if not history:
+            continue
+        last = history[-1]
+        try:
+            d_obj = datetime.datetime.strptime(last["date"], "%Y-%m-%d").date()
+            t_obj = datetime.datetime.strptime(last["time"], "%H:%M").time()
+        except Exception:
+            continue
+        last_records[u["alias"]] = {
+            "date": d_obj,
+            "time": t_obj,
+            "applicants": last.get("applicants")
+        }
+    return last_records
+
 def fetch_all():
-    """9개 대학 전체 데이터 수집 (웹 스크래핑 실패 시 엑셀 직전 데이터로 Fallback 유지)"""
+    """대상 전형 전체 데이터 수집 (웹 스크래핑 실패 시 엑셀 또는 직전 records.json 데이터로 Fallback 유지)"""
     print("=" * 80)
-    print(" [수집 시작] 9개 대상 대학 실시간 경쟁률 웹 스크래핑 진행 중...")
+    print(f" [수집 시작] {len(UNIV_CONFIGS)}개 대상 전형 실시간 경쟁률 웹 스크래핑 진행 중...")
     print("=" * 80)
     excel_records = get_current_excel_last_records()
+    json_records = get_current_json_last_records()
     results = []
     for cfg in UNIV_CONFIGS:
         res = fetch_single_university(cfg)
@@ -395,8 +423,8 @@ def fetch_all():
             rate = round(app / quota, 2)
             print(f"  ✓ [{cfg['alias']:<6}] {d_s} {t_s} | 모집: {quota:>2}명 | 지원자: {app:>4}명 | 경쟁률: {rate:.2f} : 1")
         else:
-            # Fallback: 웹 스크래핑 실패 시(해외 IP 차단 등) 엑셀의 직전 기록 유지
-            last = excel_records.get(cfg["alias"])
+            # Fallback: 웹 스크래핑 실패 시(해외 IP 차단 등) 엑셀 또는 직전 records.json 기록 유지
+            last = excel_records.get(cfg["alias"]) or json_records.get(cfg["alias"])
             if last and last["applicants"] is not None:
                 d_obj = last["date"] if isinstance(last["date"], datetime.date) else datetime.date.today()
                 t_obj = last["time"] if isinstance(last["time"], datetime.time) else datetime.time(0, 0)
@@ -414,9 +442,9 @@ def fetch_all():
                 t_s = t_obj.strftime("%H:%M")
                 quota = cfg["quota"]
                 rate = round(app_cnt / quota, 2)
-                print(f"  [유지] [{cfg['alias']:<6}] 웹 스크래핑 실패로 엑셀 직전 기록 유지 ({d_s} {t_s} | 지원자 {app_cnt:>4}명 | 경쟁률 {rate:.2f} : 1)")
+                print(f"  [유지] [{cfg['alias']:<6}] 웹 스크래핑 실패로 직전 기록 유지 ({d_s} {t_s} | 지원자 {app_cnt:>4}명 | 경쟁률 {rate:.2f} : 1)")
             else:
-                print(f"  [경고] [{cfg['alias']:<6}] 엑셀에도 기존 기록이 없어 수집 제외됨")
+                print(f"  [경고] [{cfg['alias']:<6}] 엑셀/JSON에도 기존 기록이 없어 수집 제외됨")
     return results
 
 def sync_excel_and_record(fetched_list):
@@ -748,7 +776,7 @@ def main():
 
     if args.daemon:
         interval_min = args.daemon
-        print(f"\n[데몬 모드 가동] {interval_min}분 간격으로 9개 대학 자동 수집 및 동기화를 시작합니다. (종료: Ctrl+C)")
+        print(f"\n[데몬 모드 가동] {interval_min}분 간격으로 {len(UNIV_CONFIGS)}개 전형 자동 수집 및 동기화를 시작합니다. (종료: Ctrl+C)")
         import time
         while True:
             try:
