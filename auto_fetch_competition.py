@@ -813,6 +813,74 @@ def git_pull_and_sync():
     except Exception as e:
         print(f"  [오류] Git Pull 또는 동기화 실패: {e}")
 
+def debug_single(alias_query):
+    """특정 전형의 실제 페이지 구조를 그대로 출력해서 매칭 문제를 진단"""
+    targets = [c for c in UNIV_CONFIGS if alias_query in c["alias"]]
+    if not targets:
+        print(f"[오류] '{alias_query}' 와 일치하는 전형이 없습니다. 사용 가능한 alias 목록:")
+        for c in UNIV_CONFIGS:
+            print(f"   - {c['alias']}")
+        return
+
+    for cfg in targets:
+        print("=" * 78)
+        print(f"[진단] {cfg['alias']}")
+        print(f"  대학/전형/학과 : {cfg['univ_name']} | {cfg['admission']} | {cfg['major']}")
+        print(f"  등록된 모집정원 : {cfg['quota']}명")
+        print(f"  전형 매칭어     : '{cfg['target_admission_match']}'")
+        print(f"  학과 매칭어     : '{cfg['target_major_match']}'")
+        print(f"  URL             : {cfg['url']}")
+        print("=" * 78)
+
+        try:
+            raw = _fetch_html_with_session(cfg["url"])
+            try:
+                html = raw.decode(cfg["enc"])
+            except Exception:
+                html = raw.decode("euc-kr", errors="replace")
+        except Exception as e:
+            print(f"  [오류] 페이지를 가져오지 못했습니다: {e}")
+            continue
+
+        soup = BeautifulSoup(html, "html.parser")
+        d_obj, t_obj = parse_time_from_soup(soup)
+        print(f"  페이지 기준시각 : {d_obj} {t_obj}")
+
+        maj = cfg["target_major_match"]
+        found = 0
+        for ti, table in enumerate(soup.find_all("table")):
+            headers = []
+            curr = table
+            while curr and len(headers) < 4:
+                curr = curr.find_previous(["h1", "h2", "h3", "h4", "caption", "div", "span", "p"])
+                if curr:
+                    txt = curr.get_text().strip()
+                    if any(k in txt for k in ["전형", "모집", "현황", "경쟁률"]) and len(txt) < 60:
+                        headers.append(txt)
+            header_text = " ".join(headers)
+
+            for ri, tr in enumerate(table.find_all("tr")):
+                cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
+                if maj and maj in " ".join(cells):
+                    found += 1
+                    print("")
+                    print(f"  [표{ti} / {ri}번째 행] 표 위 제목: {header_text[:70]}")
+                    print(f"     셀 내용: {cells}")
+
+        if found == 0:
+            print(f"\n  [경고] '{maj}' 글자가 들어간 행을 페이지에서 찾지 못했습니다.")
+        else:
+            print(f"\n  ('{maj}' 포함 행 총 {found}개 발견)")
+
+        res = fetch_single_university(cfg)
+        if res:
+            rate = res["applicants"] / cfg["quota"]
+            print(f"\n  >>> 현재 프로그램이 고른 값: 지원자 {res['applicants']}명 (경쟁률 {rate:.1f} : 1)")
+        else:
+            print("\n  >>> 현재 프로그램: 매칭 실패")
+        print("")
+
+
 def main():
     parser = argparse.ArgumentParser(description="수시 실시간 경쟁률 자동 수집 및 동기화 도구")
     parser.add_argument("--check", action="store_true", help="수집 결과만 화면에 표시 (저장하지 않음)")
@@ -820,8 +888,13 @@ def main():
     parser.add_argument("--push", action="store_true", help="저장 후 GitHub에 커밋 및 푸시")
     parser.add_argument("--pull", action="store_true", help="GitHub 최신 데이터 Pull 및 구글 드라이브 동기화")
     parser.add_argument("--daemon", type=int, nargs="?", const=5, help="N분 간격으로 실시간 수집·저장·푸시 상시 실행 (기본 5분)")
+    parser.add_argument("--debug", type=str, help="특정 전형의 실제 페이지 표 내용을 그대로 출력해 매칭 문제 진단 (예: --debug 한양대)")
 
     args = parser.parse_args()
+
+    if args.debug:
+        debug_single(args.debug)
+        return
 
     if args.pull:
         git_pull_and_sync()
