@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-10 20:20",
+  "updated_at": "2026-09-10 20:30",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -15,7 +15,7 @@
       "rate_str": "18.7 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -200,6 +200,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 168,
           "rate": 18.7
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 168,
+          "rate": 18.7
         }
       ]
     },
@@ -216,7 +223,7 @@
       "rate_str": "8.6 : 1",
       "prev_year": "10.0 : 1",
       "progress_pct": 86.0,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -380,6 +387,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 385,
           "rate": 8.6
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 385,
+          "rate": 8.6
         }
       ]
     },
@@ -390,13 +404,13 @@
       "admission": "가천의약학전형",
       "major": "의예과",
       "quota": 16,
-      "applicants": 372,
-      "diff": 0,
-      "rate": 23.2,
-      "rate_str": "23.2 : 1",
+      "applicants": 373,
+      "diff": 1,
+      "rate": 23.3,
+      "rate_str": "23.3 : 1",
       "prev_year": "40.0 : 1",
-      "progress_pct": 58.0,
-      "latest_time": "20:20",
+      "progress_pct": 58.2,
+      "latest_time": "20:30",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -581,6 +595,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 372,
           "rate": 23.2
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 373,
+          "rate": 23.3
         }
       ]
     },
@@ -597,7 +618,7 @@
       "rate_str": "4.7 : 1",
       "prev_year": "6.1 : 1",
       "progress_pct": 77.0,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -761,6 +782,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 85,
           "rate": 4.7
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 85,
+          "rate": 4.7
         }
       ]
     },
@@ -850,7 +878,7 @@
       "rate_str": "13.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1049,6 +1077,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 55,
           "rate": 13.8
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 55,
+          "rate": 13.8
         }
       ]
     },
@@ -1065,7 +1100,7 @@
       "rate_str": "14.2 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1236,6 +1271,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 85,
           "rate": 14.2
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 85,
+          "rate": 14.2
         }
       ]
     },
@@ -1252,7 +1294,7 @@
       "rate_str": "6.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -1435,6 +1477,13 @@
           "date": "2026-09-10",
           "time": "20:20",
           "datetime_label": "09-10 20:20",
+          "applicants": 42,
+          "rate": 6.0
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
           "applicants": 42,
           "rate": 6.0
         }
@@ -1453,7 +1502,7 @@
       "rate_str": "10.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "20:20",
+      "latest_time": "20:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -1638,6 +1687,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 42,
           "rate": 10.5
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 42,
+          "rate": 10.5
         }
       ]
     },
@@ -1648,13 +1704,13 @@
       "admission": "가천의약학전형",
       "major": "약학과",
       "quota": 10,
-      "applicants": 297,
-      "diff": 3,
-      "rate": 29.7,
-      "rate_str": "29.7 : 1",
+      "applicants": 298,
+      "diff": 1,
+      "rate": 29.8,
+      "rate_str": "29.8 : 1",
       "prev_year": "50.0 : 1",
-      "progress_pct": 59.4,
-      "latest_time": "20:20",
+      "progress_pct": 59.6,
+      "latest_time": "20:30",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -1839,6 +1895,13 @@
           "datetime_label": "09-10 20:20",
           "applicants": 297,
           "rate": 29.7
+        },
+        {
+          "date": "2026-09-10",
+          "time": "20:30",
+          "datetime_label": "09-10 20:30",
+          "applicants": 298,
+          "rate": 29.8
         }
       ]
     }
