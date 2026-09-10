@@ -194,13 +194,13 @@
       "admission": "가천의약학전형",
       "major": "의예과",
       "quota": 16,
-      "applicants": 357,
+      "applicants": 358,
       "diff": 1,
-      "rate": 22.3,
-      "rate_str": "22.3 : 1",
+      "rate": 22.4,
+      "rate_str": "22.4 : 1",
       "prev_year": "40.0 : 1",
-      "progress_pct": 55.8,
-      "latest_time": "17:40",
+      "progress_pct": 56.0,
+      "latest_time": "17:50",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -273,6 +273,13 @@
           "datetime_label": "09-10 17:40",
           "applicants": 357,
           "rate": 22.3
+        },
+        {
+          "date": "2026-09-10",
+          "time": "17:50",
+          "datetime_label": "09-10 17:50",
+          "applicants": 358,
+          "rate": 22.4
         }
       ]
     },
@@ -418,7 +425,7 @@
       "major": "의예과",
       "quota": 4,
       "applicants": 55,
-      "diff": 40,
+      "diff": 0,
       "rate": 13.8,
       "rate_str": "13.8 : 1",
       "prev_year": "신설",
@@ -515,6 +522,13 @@
           "date": "2026-09-10",
           "time": "17:40",
           "datetime_label": "09-10 17:40",
+          "applicants": 55,
+          "rate": 13.8
+        },
+        {
+          "date": "2026-09-10",
+          "time": "17:50",
+          "datetime_label": "09-10 17:50",
           "applicants": 55,
           "rate": 13.8
         }
@@ -828,7 +842,7 @@
       "rate_str": "28.2 : 1",
       "prev_year": "50.0 : 1",
       "progress_pct": 56.4,
-      "latest_time": "17:40",
+      "latest_time": "17:50",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -899,6 +913,13 @@
           "date": "2026-09-10",
           "time": "17:40",
           "datetime_label": "09-10 17:40",
+          "applicants": 282,
+          "rate": 28.2
+        },
+        {
+          "date": "2026-09-10",
+          "time": "17:50",
+          "datetime_label": "09-10 17:50",
           "applicants": 282,
           "rate": 28.2
         }
