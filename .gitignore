@@ -13,3 +13,6 @@ Thumbs.db
 
 # Vercel
 .vercel
+
+# Netlify
+.netlify

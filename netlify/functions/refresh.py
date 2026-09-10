@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
+"""
+Netlify Functions용 즉시 새로고침 함수 (AWS Lambda 스타일 handler(event, context) 시그니처).
+
+api/refresh.py(Vercel용)와 로직은 완전히 동일하며, 호출 규약만 Netlify Functions에
+맞게 이식했습니다.
+※ UNIV_CONFIGS는 auto_fetch_competition.py / api/refresh.py / 이 파일 세 군데에
+  중복 정의되어 있습니다 — 대학·전형 정보를 바꿀 때는 반드시 세 파일 모두 동일하게
+  수정하세요.
+※ Netlify에서 이 함수를 직접 테스트해 보지 못했습니다(이 개발 환경에는 Netlify
+  런타임/계정이 없음). 배포 후 "/api/refresh" 응답을 한 번 확인해 주세요. 실패하더라도
+  index.html이 자동으로 data/records.json 정적 데이터로 폴백하므로 대시보드 자체는
+  정상 동작합니다.
+"""
 import os
 import re
 import json
 import datetime
 import urllib.request
-from http.server import BaseHTTPRequestHandler
 from bs4 import BeautifulSoup
 
 # 11개 대상 전형 설정 (의약학 계열: 핵심 6 + 모니터링 5)
-# ※ auto_fetch_competition.py의 UNIV_CONFIGS와 반드시 동일하게 유지할 것 (두 파일에 중복 정의됨)
 UNIV_CONFIGS = [
     {
         "category": "지원 1",
@@ -177,6 +188,7 @@ UNIV_CONFIGS = [
     }
 ]
 
+
 def parse_time_from_soup(soup):
     pattern = r'(\d{4})[-\.년]\s*(\d{1,2})[-\.월]\s*(\d{1,2})[일\.]?\s*(오전|오후)?\s*(\d{1,2})[:시]\s*(\d{1,2})'
     for s in soup.stripped_strings:
@@ -193,6 +205,7 @@ def parse_time_from_soup(soup):
             return date_obj, time_obj
     return None, None
 
+
 def fetch_single(cfg):
     req = urllib.request.Request(
         cfg["url"],
@@ -201,7 +214,7 @@ def fetch_single(cfg):
         }
     )
     try:
-        with urllib.request.urlopen(req, timeout=5) as resp:
+        with urllib.request.urlopen(req, timeout=8) as resp:
             raw = resp.read()
             try:
                 html = raw.decode(cfg["enc"])
@@ -243,7 +256,7 @@ def fetch_single(cfg):
                                 q_idx = cells.index(q_str)
                             else:
                                 q_idx = cells.index(nums[-2])
-                            
+
                             if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
                                 app = int(cells[q_idx + 1])
                                 rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
@@ -266,109 +279,117 @@ def fetch_single(cfg):
         pass
     return None
 
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        # 1. 기존 records.json 로드
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        json_path = os.path.join(base_dir, "data", "records.json")
-        
-        fallback_data = {"universities": []}
-        if os.path.exists(json_path):
+
+def _load_fallback_json():
+    """data/records.json을 여러 후보 경로에서 찾아 로드 (Netlify 번들 경로가 환경마다 달라질 수 있어 방어적으로 처리)"""
+    here = os.path.dirname(os.path.abspath(__file__))
+    candidates = [
+        os.path.join(here, "..", "..", "data", "records.json"),   # 로컬: netlify/functions/ -> repo root
+        os.path.join(here, "data", "records.json"),               # included_files로 함수 폴더에 번들된 경우
+        os.path.join(os.getcwd(), "data", "records.json"),        # 런타임 작업 디렉터리가 repo root인 경우
+        os.environ.get("LAMBDA_TASK_ROOT", "") and os.path.join(os.environ["LAMBDA_TASK_ROOT"], "data", "records.json"),
+    ]
+    for path in candidates:
+        if path and os.path.exists(path):
             try:
-                with open(json_path, "r", encoding="utf-8") as f:
-                    fallback_data = json.load(f)
+                with open(path, "r", encoding="utf-8") as f:
+                    return json.load(f)
             except Exception:
-                pass
+                continue
+    return {"universities": []}
 
-        univ_dict = {u["alias"]: u for u in fallback_data.get("universities", [])}
 
-        # 2. 실시간 크롤링 수행
-        latest_time_str = fallback_data.get("updated_at", "10:00").split()[-1]
-        
-        for cfg in UNIV_CONFIGS:
-            alias = cfg["alias"]
-            live_res = fetch_single(cfg)
-            if live_res:
-                cur_app = live_res["applicants"]
-                cur_rate = round(cur_app / cfg["quota"], 2)
-                t_str = live_res["time"].strftime("%H:%M")
-                d_str = live_res["date"].strftime("%Y-%m-%d")
+def handler(event, context):
+    # 1. 기존 records.json 로드 (폴백용)
+    fallback_data = _load_fallback_json()
+    univ_dict = {u["alias"]: u for u in fallback_data.get("universities", [])}
 
-                if t_str > latest_time_str:
-                    latest_time_str = t_str
+    # 2. 실시간 크롤링 수행
+    latest_time_str = fallback_data.get("updated_at", "10:00").split()[-1]
 
-                # 전년도 경쟁률 데이터가 없으면(예: "데이터 없음") 진행률을 계산하지 않고 None 처리
-                progress_pct = None
-                if ":" in cfg["prev_year"]:
-                    prev_yr_num = float(cfg["prev_year"].split(":")[0].strip())
-                    if prev_yr_num > 0:
-                        progress_pct = round((cur_rate / prev_yr_num) * 100, 1)
+    for cfg in UNIV_CONFIGS:
+        alias = cfg["alias"]
+        live_res = fetch_single(cfg)
+        if live_res:
+            cur_app = live_res["applicants"]
+            cur_rate = round(cur_app / cfg["quota"], 2)
+            t_str = live_res["time"].strftime("%H:%M")
+            d_str = live_res["date"].strftime("%Y-%m-%d")
 
-                existing = univ_dict.get(alias)
-                history = existing.get("history", []) if existing else []
+            if t_str > latest_time_str:
+                latest_time_str = t_str
 
-                # history 마지막과 비교하여 새 시점이면 추가
-                if history:
-                    last_h = history[-1]
-                    if last_h.get("time") != t_str or last_h.get("date") != d_str:
-                        if cur_app >= last_h.get("applicants", 0):
-                            history.append({
-                                "date": d_str,
-                                "time": t_str,
-                                "datetime_label": f"{d_str[-5:]} {t_str}",
-                                "applicants": cur_app,
-                                "rate": cur_rate
-                            })
-                else:
-                    history.append({
-                        "date": d_str,
-                        "time": t_str,
-                        "datetime_label": f"{d_str[-5:]} {t_str}",
-                        "applicants": cur_app,
-                        "rate": cur_rate
-                    })
+            # 전년도 경쟁률 데이터가 없으면(예: "신설") 진행률을 계산하지 않고 None 처리
+            progress_pct = None
+            if ":" in cfg["prev_year"]:
+                prev_yr_num = float(cfg["prev_year"].split(":")[0].strip())
+                if prev_yr_num > 0:
+                    progress_pct = round((cur_rate / prev_yr_num) * 100, 1)
 
-                diff = 0
-                if len(history) >= 2:
-                    diff = history[-1]["applicants"] - history[-2]["applicants"]
+            existing = univ_dict.get(alias)
+            history = existing.get("history", []) if existing else []
 
-                univ_dict[alias] = {
-                    "category": cfg["category"],
-                    "alias": alias,
-                    "univ_name": cfg["univ_name"],
-                    "admission": cfg["admission"],
-                    "major": cfg["major"],
-                    "quota": cfg["quota"],
+            if history:
+                last_h = history[-1]
+                if last_h.get("time") != t_str or last_h.get("date") != d_str:
+                    if cur_app >= last_h.get("applicants", 0):
+                        history.append({
+                            "date": d_str,
+                            "time": t_str,
+                            "datetime_label": f"{d_str[-5:]} {t_str}",
+                            "applicants": cur_app,
+                            "rate": cur_rate
+                        })
+            else:
+                history.append({
+                    "date": d_str,
+                    "time": t_str,
+                    "datetime_label": f"{d_str[-5:]} {t_str}",
                     "applicants": cur_app,
-                    "diff": diff,
-                    "rate": cur_rate,
-                    "rate_str": f"{cur_rate:.2f} : 1",
-                    "prev_year": cfg["prev_year"],
-                    "progress_pct": progress_pct,
-                    "latest_time": t_str,
-                    "url": cfg["url"],
-                    "history": history
-                }
+                    "rate": cur_rate
+                })
 
-        final_univs = []
-        for cfg in UNIV_CONFIGS:
-            if cfg["alias"] in univ_dict:
-                final_univs.append(univ_dict[cfg["alias"]])
+            diff = 0
+            if len(history) >= 2:
+                diff = history[-1]["applicants"] - history[-2]["applicants"]
 
-        today_str = datetime.date.today().strftime("%Y-%m-%d")
-        response_payload = {
-            "updated_at": f"{today_str} {latest_time_str}",
-            "total_target_colleges": len(final_univs),
-            "universities": final_univs,
-            "live_refreshed": True
-        }
+            univ_dict[alias] = {
+                "category": cfg["category"],
+                "alias": alias,
+                "univ_name": cfg["univ_name"],
+                "admission": cfg["admission"],
+                "major": cfg["major"],
+                "quota": cfg["quota"],
+                "applicants": cur_app,
+                "diff": diff,
+                "rate": cur_rate,
+                "rate_str": f"{cur_rate:.2f} : 1",
+                "prev_year": cfg["prev_year"],
+                "progress_pct": progress_pct,
+                "latest_time": t_str,
+                "url": cfg["url"],
+                "history": history
+            }
 
-        # 3. JSON 응답 전송
-        body = json.dumps(response_payload, ensure_ascii=False).encode("utf-8")
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
-        self.send_header("Content-Length", str(len(body)))
-        self.end_headers()
-        self.wfile.write(body)
+    final_univs = []
+    for cfg in UNIV_CONFIGS:
+        if cfg["alias"] in univ_dict:
+            final_univs.append(univ_dict[cfg["alias"]])
+
+    today_str = datetime.date.today().strftime("%Y-%m-%d")
+    response_payload = {
+        "updated_at": f"{today_str} {latest_time_str}",
+        "total_target_colleges": len(final_univs),
+        "universities": final_univs,
+        "live_refreshed": True
+    }
+
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0"
+        },
+        "body": json.dumps(response_payload, ensure_ascii=False)
+    }

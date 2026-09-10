@@ -1,0 +1,34 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# refresh 함수가 배포 시 data/records.json(폴백용)을 함께 번들에 포함하도록 지정
+[functions."refresh"]
+  included_files = ["data/records.json"]
+
+# index.html이 호출하는 /api/refresh 경로를 Netlify Function으로 연결
+# (index.html 코드를 건드리지 않고 Vercel과 동일한 URL 규약을 유지하기 위함)
+[[redirects]]
+  from = "/api/refresh"
+  to = "/.netlify/functions/refresh"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/api/refresh"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+
+[[headers]]
+  for = "/data/records.json"
+  [headers.values]
+    Cache-Control = "no-store, no-cache, must-revalidate, max-age=0"
+    Pragma = "no-cache"
+    Expires = "0"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
