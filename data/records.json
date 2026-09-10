@@ -1,6 +1,6 @@
 {
   "updated_at": "2026-09-10 17:10",
-  "total_target_colleges": 7,
+  "total_target_colleges": 11,
   "universities": [
     {
       "category": "지원 1",
@@ -17,6 +17,7 @@
       "progress_pct": null,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -70,6 +71,7 @@
       "progress_pct": 82.0,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -109,6 +111,32 @@
       ]
     },
     {
+      "category": "지원 3",
+      "alias": "가천대-의예과",
+      "univ_name": "가천대학교",
+      "admission": "가천의약학전형",
+      "major": "의예과",
+      "quota": 16,
+      "applicants": 0,
+      "diff": 0,
+      "rate": 0.0,
+      "rate_str": "0.0 : 1",
+      "prev_year": "40.0 : 1",
+      "progress_pct": 0.0,
+      "latest_time": "08:17",
+      "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
+      "is_placeholder": true,
+      "history": [
+        {
+          "date": "2026-09-10",
+          "time": "08:17",
+          "datetime_label": "09-10 08:17",
+          "applicants": 0,
+          "rate": 0.0
+        }
+      ]
+    },
+    {
       "category": "지원 4",
       "alias": "원광대-의약학치의예과",
       "univ_name": "원광대학교",
@@ -123,6 +151,7 @@
       "progress_pct": 73.8,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -162,6 +191,58 @@
       ]
     },
     {
+      "category": "지원 5",
+      "alias": "성균관대-약학과",
+      "univ_name": "성균관대학교",
+      "admission": "학생부종합(융합인재)",
+      "major": "약학과",
+      "quota": 10,
+      "applicants": 0,
+      "diff": 0,
+      "rate": 0.0,
+      "rate_str": "0.0 : 1",
+      "prev_year": "신설",
+      "progress_pct": null,
+      "latest_time": "08:17",
+      "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10920591.html",
+      "is_placeholder": true,
+      "history": [
+        {
+          "date": "2026-09-10",
+          "time": "08:17",
+          "datetime_label": "09-10 08:17",
+          "applicants": 0,
+          "rate": 0.0
+        }
+      ]
+    },
+    {
+      "category": "지원 6",
+      "alias": "한양대ERICA-약학과",
+      "univ_name": "한양대학교(ERICA)",
+      "admission": "학생부종합(서류형)",
+      "major": "약학과",
+      "quota": 15,
+      "applicants": 0,
+      "diff": 0,
+      "rate": 0.0,
+      "rate_str": "0.0 : 1",
+      "prev_year": "35.7 : 1",
+      "progress_pct": 0.0,
+      "latest_time": "08:17",
+      "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
+      "is_placeholder": true,
+      "history": [
+        {
+          "date": "2026-09-10",
+          "time": "08:17",
+          "datetime_label": "09-10 08:17",
+          "applicants": 0,
+          "rate": 0.0
+        }
+      ]
+    },
+    {
       "category": "기타",
       "alias": "전북대-지역인재2유형",
       "univ_name": "전북대학교",
@@ -176,6 +257,7 @@
       "progress_pct": null,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -229,6 +311,7 @@
       "progress_pct": null,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -282,6 +365,7 @@
       "progress_pct": null,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -335,6 +419,7 @@
       "progress_pct": null,
       "latest_time": "17:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
+      "is_placeholder": false,
       "history": [
         {
           "date": "2026-09-10",
@@ -370,6 +455,32 @@
           "datetime_label": "09-10 17:10",
           "applicants": 41,
           "rate": 10.2
+        }
+      ]
+    },
+    {
+      "category": "기타",
+      "alias": "가천대-약학과",
+      "univ_name": "가천대학교",
+      "admission": "가천의약학전형",
+      "major": "약학과",
+      "quota": 10,
+      "applicants": 0,
+      "diff": 0,
+      "rate": 0.0,
+      "rate_str": "0.0 : 1",
+      "prev_year": "50.0 : 1",
+      "progress_pct": 0.0,
+      "latest_time": "08:17",
+      "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
+      "is_placeholder": true,
+      "history": [
+        {
+          "date": "2026-09-10",
+          "time": "08:17",
+          "datetime_label": "09-10 08:17",
+          "applicants": 0,
+          "rate": 0.0
         }
       ]
     }
