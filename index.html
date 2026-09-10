@@ -403,7 +403,11 @@
 
       list.forEach((u) => {
         // 증감 배지: 애플 스타일의 부드러운 텍스트 배지
-        const diffBadge = u.diff > 0 
+        const diffBadge = u.is_placeholder
+          ? `<span class="inline-flex items-center text-[11px] font-normal text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+               수집 대기중
+             </span>`
+          : u.diff > 0
           ? `<span class="inline-flex items-center text-[12px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
                +${u.diff}명 증가
              </span>`
@@ -428,7 +432,7 @@
                   ${u.category}
                 </span>
                 <span class="text-[12px] text-apple-muted font-normal whitespace-nowrap">
-                  ${u.latest_time} 기준
+                  ${u.is_placeholder ? '미수집' : `${u.latest_time} 기준`}
                 </span>
               </div>
 
@@ -443,10 +447,10 @@
               <div class="mt-5 p-4 rounded-apple-md bg-apple-parchment/70 border border-apple-hairline/60 flex items-baseline justify-between">
                 <div>
                   <div class="text-[11px] font-medium text-apple-muted uppercase tracking-wider">실시간 경쟁률</div>
-                  <div class="text-[30px] font-semibold tracking-tight text-apple-ink mt-0.5">${u.rate_str}</div>
+                  <div class="text-[30px] font-semibold tracking-tight ${u.is_placeholder ? 'text-apple-mutedLight' : 'text-apple-ink'} mt-0.5">${u.is_placeholder ? '집계 대기중' : u.rate_str}</div>
                 </div>
                 <div class="text-right">
-                  <div class="text-[13px] font-medium text-apple-ink">${u.applicants}명 <span class="text-apple-muted font-normal text-xs">/ ${u.quota}명</span></div>
+                  <div class="text-[13px] font-medium text-apple-ink">${u.is_placeholder ? `정원 ${u.quota}명` : `${u.applicants}명 <span class="text-apple-muted font-normal text-xs">/ ${u.quota}명</span>`}</div>
                   <div class="mt-1">${diffBadge}</div>
                 </div>
               </div>
@@ -496,13 +500,13 @@
         tr.className = `${rowBg} transition`;
         tr.innerHTML = `
           <td class="py-3.5 px-4 whitespace-nowrap">${badge}</td>
-          <td class="py-3.5 px-3 font-mono text-apple-muted text-[12px] whitespace-nowrap">${u.latest_time}</td>
+          <td class="py-3.5 px-3 font-mono text-apple-muted text-[12px] whitespace-nowrap">${u.is_placeholder ? '미수집' : u.latest_time}</td>
           <td class="py-3.5 px-4 font-semibold text-apple-ink whitespace-nowrap">${u.univ_name}${starMark}</td>
           <td class="py-3.5 px-4 text-apple-muted whitespace-nowrap">${u.admission}</td>
           <td class="py-3.5 px-4 text-apple-ink font-medium whitespace-nowrap">${u.major}</td>
           <td class="py-3.5 px-3 text-center font-medium text-apple-muted whitespace-nowrap">${u.quota}</td>
-          <td class="py-3.5 px-3 text-center font-semibold text-apple-ink whitespace-nowrap">${u.applicants}</td>
-          <td class="py-3.5 px-4 text-center font-semibold text-apple-blue text-[14px] whitespace-nowrap">${u.rate_str}</td>
+          <td class="py-3.5 px-3 text-center font-semibold text-apple-ink whitespace-nowrap">${u.is_placeholder ? '-' : u.applicants}</td>
+          <td class="py-3.5 px-4 text-center font-semibold ${u.is_placeholder ? 'text-apple-mutedLight' : 'text-apple-blue'} text-[14px] whitespace-nowrap">${u.is_placeholder ? '집계 대기중' : u.rate_str}</td>
           <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.prev_year}</td>
           <td class="py-3.5 px-4 text-center whitespace-nowrap">
             <a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-apple-blue hover:text-apple-blueHover text-[12px] inline-flex items-center gap-1 font-medium whitespace-nowrap">

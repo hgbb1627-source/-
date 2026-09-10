@@ -462,7 +462,19 @@ def fetch_all():
                 rate = round(app_cnt / quota, 1)
                 print(f"  [유지] [{cfg['alias']:<6}] 웹 스크래핑 실패로 직전 기록 유지 ({d_s} {t_s} | 지원자 {app_cnt:>4}명 | 경쟁률 {rate:.1f} : 1)")
             else:
-                print(f"  [경고] [{cfg['alias']:<6}] 엑셀/JSON에도 기존 기록이 없어 수집 제외됨")
+                # 엑셀/JSON에도 기록이 전혀 없는 경우(한 번도 수집 성공 못 한 대학) —
+                # 목록에서 빼지 않고 0명 플레이스홀더로 표시해서 카드/표가 항상 다 보이게 함
+                placeholder_res = {
+                    "cfg": cfg,
+                    "date": datetime.date.today(),
+                    "time": datetime.time(datetime.datetime.now().hour, datetime.datetime.now().minute),
+                    "applicants": 0,
+                    "rate_str": "집계 대기",
+                    "is_fallback": True,
+                    "is_placeholder": True
+                }
+                results.append(placeholder_res)
+                print(f"  [대기] [{cfg['alias']:<6}] 아직 수집된 데이터가 없어 0명으로 표시(대시보드에는 계속 노출됨)")
     return results
 
 def sync_excel_and_record(fetched_list):
@@ -674,6 +686,7 @@ def export_records_json(fetched_list):
             "progress_pct": progress_pct,
             "latest_time": cur_t_str,
             "url": cfg["url"],
+            "is_placeholder": item.get("is_placeholder", False),
             "history": history
         })
 
