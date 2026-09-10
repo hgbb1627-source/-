@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-10 14:30",
+  "updated_at": "2026-09-10 14:40",
   "total_target_colleges": 7,
   "universities": [
     {
@@ -9,13 +9,13 @@
       "admission": "학생부교과 지역의사선발전형-전주권",
       "major": "의예과",
       "quota": 9,
-      "applicants": 152,
-      "diff": 0,
-      "rate": 16.89,
-      "rate_str": "16.89 : 1",
+      "applicants": 153,
+      "diff": 1,
+      "rate": 17.0,
+      "rate_str": "17.00 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "history": [
         {
@@ -24,6 +24,13 @@
           "datetime_label": "09-10 14:30",
           "applicants": 152,
           "rate": 16.89
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
+          "applicants": 153,
+          "rate": 17.0
         }
       ]
     },
@@ -40,13 +47,20 @@
       "rate_str": "7.91 : 1",
       "prev_year": "10.00 : 1",
       "progress_pct": 79.1,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 356,
+          "rate": 7.91
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 356,
           "rate": 7.91
         }
@@ -65,13 +79,20 @@
       "rate_str": "4.44 : 1",
       "prev_year": "6.10 : 1",
       "progress_pct": 72.8,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 80,
+          "rate": 4.44
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 80,
           "rate": 4.44
         }
@@ -90,13 +111,20 @@
       "rate_str": "3.25 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 13,
+          "rate": 3.25
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 13,
           "rate": 3.25
         }
@@ -115,13 +143,20 @@
       "rate_str": "13.50 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 81,
+          "rate": 13.5
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 81,
           "rate": 13.5
         }
@@ -140,13 +175,20 @@
       "rate_str": "5.14 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 36,
+          "rate": 5.14
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 36,
           "rate": 5.14
         }
@@ -165,13 +207,20 @@
       "rate_str": "9.00 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "14:30",
+      "latest_time": "14:40",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "history": [
         {
           "date": "2026-09-10",
           "time": "14:30",
           "datetime_label": "09-10 14:30",
+          "applicants": 36,
+          "rate": 9.0
+        },
+        {
+          "date": "2026-09-10",
+          "time": "14:40",
+          "datetime_label": "09-10 14:40",
           "applicants": 36,
           "rate": 9.0
         }
