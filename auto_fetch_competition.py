@@ -626,17 +626,6 @@ def update_readme(fetched_list):
     pattern = r"### 📊 종합비교 대시보드 실시간 현황.*?(?=\n---\n|\n##|\Z)"
     updated_content = re.sub(pattern, new_table, content, flags=re.DOTALL)
 
-    updated_content = updated_content.replace("총 11개 대학", "총 9개 대학")
-    updated_content = updated_content.replace("기타 모니터링 대학 (5개 대학)", "기타 모니터링 대학 (3개 대학)")
-    lines = []
-    for line in updated_content.splitlines():
-        if "한신대학교" in line and ("학생부교과" in line or "10." in line):
-            continue
-        if "서울신학대학교" in line and ("H+인재" in line or "11." in line):
-            continue
-        lines.append(line)
-    updated_content = "\n".join(lines) + "\n"
-
     with open(README_PATH, "w", encoding="utf-8") as f:
         f.write(updated_content)
 
@@ -654,8 +643,12 @@ def git_commit_and_push(latest_time_str):
             print("  [Git 알림] 커밋할 변경사항이 없습니다.")
             return
         subprocess.run(["git", "commit", "-m", msg], cwd=BASE_DIR, check=True)
-        subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, check=True)
-        print("  ✓ GitHub 푸시 완료!")
+        branch = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=BASE_DIR,
+            capture_output=True, text=True, check=True
+        ).stdout.strip()
+        subprocess.run(["git", "push", "origin", branch], cwd=BASE_DIR, check=True)
+        print(f"  ✓ GitHub 푸시 완료! ({branch} 브랜치)")
     except Exception as e:
         print(f"  [Git 오류] Git 작업 실패: {e}")
 
@@ -664,8 +657,12 @@ def git_pull_and_sync():
     import subprocess
     print("\n[Git 동기화] GitHub 최신 데이터 내려받기(Pull) 진행 중...")
     try:
-        subprocess.run(["git", "pull", "origin", "main"], cwd=BASE_DIR, check=True)
-        print("  ✓ Git Pull 성공!")
+        branch = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=BASE_DIR,
+            capture_output=True, text=True, check=True
+        ).stdout.strip()
+        subprocess.run(["git", "pull", "origin", branch], cwd=BASE_DIR, check=True)
+        print(f"  ✓ Git Pull 성공! ({branch} 브랜치)")
         if os.path.exists(LOCAL_EXCEL_PATH) and os.path.exists(os.path.dirname(GDRIVE_EXCEL_PATH)):
             shutil.copy2(LOCAL_EXCEL_PATH, GDRIVE_EXCEL_PATH)
             print(f"  ✓ [동기화 완료] Google Drive 엑셀 파일이 최신 버전으로 갱신되었습니다:\n    -> {GDRIVE_EXCEL_PATH}")

@@ -39,5 +39,5 @@ jobs:
             echo "No changes detected. Skipping commit."
           else
             git commit -m "Auto update admission records (GitHub Actions) [skip ci]"
-            git push origin main
+            git push origin HEAD:${{ github.ref_name }}
           fi
