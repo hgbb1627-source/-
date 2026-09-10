@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 17:00",
+  "updated_at": "2026-09-10 17:00",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -15,7 +15,7 @@
       "rate_str": "20.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -452,6 +452,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 187,
           "rate": 20.8
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 187,
+          "rate": 20.8
         }
       ]
     },
@@ -468,7 +475,7 @@
       "rate_str": "9.2 : 1",
       "prev_year": "10.0 : 1",
       "progress_pct": 92.0,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -882,6 +889,13 @@
           "date": "2026-09-11",
           "time": "03:00",
           "datetime_label": "09-11 03:00",
+          "applicants": 412,
+          "rate": 9.2
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
           "applicants": 412,
           "rate": 9.2
         }
@@ -1374,7 +1388,7 @@
       "rate_str": "5.7 : 1",
       "prev_year": "6.1 : 1",
       "progress_pct": 93.4,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -1790,6 +1804,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 102,
           "rate": 5.7
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 102,
+          "rate": 5.7
         }
       ]
     },
@@ -1928,7 +1949,7 @@
       "rate_str": "14.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -2379,6 +2400,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 58,
           "rate": 14.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 58,
+          "rate": 14.5
         }
       ]
     },
@@ -2395,7 +2423,7 @@
       "rate_str": "17.2 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -2818,6 +2846,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 103,
           "rate": 17.2
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 103,
+          "rate": 17.2
         }
       ]
     },
@@ -2834,7 +2869,7 @@
       "rate_str": "6.9 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3271,6 +3306,13 @@
           "datetime_label": "09-11 03:00",
           "applicants": 48,
           "rate": 6.9
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
+          "applicants": 48,
+          "rate": 6.9
         }
       ]
     },
@@ -3287,7 +3329,7 @@
       "rate_str": "12.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "03:00",
+      "latest_time": "03:10",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3722,6 +3764,13 @@
           "date": "2026-09-11",
           "time": "03:00",
           "datetime_label": "09-11 03:00",
+          "applicants": 48,
+          "rate": 12.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "03:10",
+          "datetime_label": "09-11 03:10",
           "applicants": 48,
           "rate": 12.0
         }
