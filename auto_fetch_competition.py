@@ -527,10 +527,30 @@ def sync_excel_and_record(fetched_list):
 
     return update_summary
 
+def _load_existing_json_history():
+    """기존 data/records.json에서 alias별 history를 읽어옴 (엑셀이 없는 클라우드 환경용 폴백)"""
+    if not os.path.exists(JSON_PATH):
+        return {}
+    try:
+        with open(JSON_PATH, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+        return {u["alias"]: u.get("history", []) for u in existing.get("universities", [])}
+    except Exception:
+        return {}
+
 def export_records_json(fetched_list):
     """웹앱에서 실시간으로 읽을 수 있는 경량 JSON 데이터셋(data/records.json) 추출 및 저장"""
     excel_path = get_excel_path()
-    wb = openpyxl.load_workbook(excel_path, data_only=True)
+    wb = None
+    if os.path.exists(excel_path):
+        try:
+            wb = openpyxl.load_workbook(excel_path, data_only=True)
+        except Exception as e:
+            print(f"[알림] 엑셀 읽기 실패, JSON 히스토리 폴백 사용: {e}")
+
+    # 엑셀이 없는 환경(GitHub Actions 등)에서는 직전 커밋된 records.json의
+    # history를 이어받아 누적한다 (있으면).
+    json_history_fallback = _load_existing_json_history() if wb is None else {}
 
     latest_time_str = "00:00"
     univ_data_list = []
@@ -540,26 +560,43 @@ def export_records_json(fetched_list):
         alias = cfg["alias"]
         sname = cfg["sheet"]
         cur_t_str = item["time"].strftime("%H:%M")
+        cur_d_str = item["date"].strftime("%Y-%m-%d")
         if cur_t_str > latest_time_str:
             latest_time_str = cur_t_str
 
-        ws = wb[sname]
         history = []
-        for r in range(21, 81):
-            d_val = ws.cell(r, 2).value
-            t_val = ws.cell(r, 3).value
-            app_val = ws.cell(r, 4).value
-            if app_val is not None:
-                d_str = d_val.strftime("%Y-%m-%d") if isinstance(d_val, (datetime.date, datetime.datetime)) else str(d_val)
-                t_str = t_val.strftime("%H:%M") if isinstance(t_val, (datetime.time, datetime.datetime)) else str(t_val)
-                q = cfg["quota"]
-                rate = round(int(app_val) / q, 2)
+        if wb is not None and sname in wb.sheetnames:
+            ws = wb[sname]
+            for r in range(21, 81):
+                d_val = ws.cell(r, 2).value
+                t_val = ws.cell(r, 3).value
+                app_val = ws.cell(r, 4).value
+                if app_val is not None:
+                    d_str = d_val.strftime("%Y-%m-%d") if isinstance(d_val, (datetime.date, datetime.datetime)) else str(d_val)
+                    t_str = t_val.strftime("%H:%M") if isinstance(t_val, (datetime.time, datetime.datetime)) else str(t_val)
+                    q = cfg["quota"]
+                    rate = round(int(app_val) / q, 2)
+                    history.append({
+                        "date": d_str,
+                        "time": t_str,
+                        "datetime_label": f"{d_str[-5:]} {t_str}",
+                        "applicants": int(app_val),
+                        "rate": rate
+                    })
+        else:
+            # JSON 히스토리 폴백: 직전 기록을 이어받고, 새 시점/증가분만 추가
+            history = list(json_history_fallback.get(alias, []))
+            cur_app_val = item["applicants"]
+            last_h = history[-1] if history else None
+            is_new_point = (not last_h) or (last_h.get("time") != cur_t_str or last_h.get("date") != cur_d_str)
+            if is_new_point and (not last_h or cur_app_val >= last_h.get("applicants", 0)):
+                cur_rate_val = round(cur_app_val / cfg["quota"], 2)
                 history.append({
-                    "date": d_str,
-                    "time": t_str,
-                    "datetime_label": f"{d_str[-5:]} {t_str}",
-                    "applicants": int(app_val),
-                    "rate": rate
+                    "date": cur_d_str,
+                    "time": cur_t_str,
+                    "datetime_label": f"{cur_d_str[-5:]} {cur_t_str}",
+                    "applicants": cur_app_val,
+                    "rate": cur_rate_val
                 })
 
         diff = 0
@@ -607,7 +644,7 @@ def export_records_json(fetched_list):
     print(f"[JSON 갱신 완료] 웹앱 데이터 파일 생성 완료: {JSON_PATH}")
 
 def update_readme(fetched_list):
-    """README.md의 종합비교 대시보드 표를 9개 대학 최신 수치로 동기화"""
+    """README.md의 종합비교 대시보드 표를 최신 수치로 동기화"""
     if not os.path.exists(README_PATH):
         return
 
