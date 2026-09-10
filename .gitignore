@@ -1,0 +1,15 @@
+# 개인 엑셀 데이터 (Google Drive/로컬 전용, 저장소에는 미포함)
+data/*.xlsx
+data/*.xls
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel

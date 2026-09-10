@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>2027 수시 실시간 경쟁률 모니터링</title>
+  
+  <!-- Apple Font Stack: SF Pro (System) -> Pretendard -> Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- Font Awesome for clean utility icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN & Date Adapter -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              '-apple-system',
+              'BlinkMacSystemFont',
+              '"SF Pro Text"',
+              '"SF Pro Display"',
+              'Pretendard',
+              'Inter',
+              'sans-serif'
+            ]
+          },
+          colors: {
+            apple: {
+              canvas: '#ffffff',
+              parchment: '#f5f5f7',
+              pearl: '#fafafc',
+              hairline: '#e5e5e7',
+              divider: 'rgba(0, 0, 0, 0.06)',
+              ink: '#1d1d1f',
+              muted: '#86868b',
+              mutedLight: '#a1a1a6',
+              blue: '#0071e3',          /* Action Blue */
+              blueHover: '#0077ed',
+              blueActive: '#0066cc',
+              sky: '#2997ff',           /* Sky Link Blue on Dark */
+              darkTile: '#1d1d1f',
+              darkTile2: '#272729'
+            }
+          },
+          letterSpacing: {
+            tightest: '-0.025em',
+            tighter: '-0.018em',
+            appleTight: '-0.012em'
+          },
+          borderRadius: {
+            'apple-sm': '8px',
+            'apple-md': '12px',
+            'apple-card': '18px',
+            'apple-pill': '9999px'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Apple Typography & Texture */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Pretendard", "Inter", sans-serif;
+      background-color: #f5f5f7; /* Signature Apple Parchment */
+      color: #1d1d1f;            /* Apple Near-Black Ink */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      letter-spacing: -0.012em;
+    }
+
+    /* Apple Utility Card (18px radius, 1px hairline, whisper soft shadow) */
+    .apple-card {
+      background-color: #ffffff;
+      border: 1px solid #e5e5e7;
+      border-radius: 18px;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    }
+    .apple-card:hover {
+      border-color: #d2d2d7;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Apple Frosted Glass Effect */
+    .apple-frosted {
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+
+    .apple-frosted-dark {
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+
+    /* Apple Pill Button */
+    .apple-btn-primary {
+      background-color: #0071e3;
+      color: #ffffff;
+      border-radius: 9999px;
+      font-weight: 400;
+      transition: all 0.15s ease;
+    }
+    .apple-btn-primary:hover {
+      background-color: #0077ed;
+    }
+    .apple-btn-primary:active {
+      background-color: #0066cc;
+      transform: scale(0.96);
+    }
+
+    .apple-btn-secondary {
+      background-color: #f5f5f7;
+      color: #1d1d1f;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+    }
+    .apple-btn-secondary:hover {
+      background-color: #e8e8ed;
+    }
+    .apple-btn-secondary:active {
+      transform: scale(0.96);
+    }
+
+    /* Micro animations */
+    .pulse-live {
+      animation: pulse-apple 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-apple {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+  <!-- 1. Apple Global Navigation Bar (Height: 44px, Surface Black) -->
+  <nav class="sticky top-0 z-50 apple-frosted-dark border-b border-white/10 text-white px-4 h-11 flex items-center">
+    <div class="max-w-5xl mx-auto w-full flex items-center justify-between">
+      <div class="flex items-center space-x-2 text-[13px] font-medium tracking-tight">
+        <i class="fa-solid fa-graduation-cap text-[#0071e3] text-sm"></i>
+        <span>2027 수시 경쟁률 모니터링 시스템</span>
+      </div>
+      <div class="flex items-center space-x-3 text-xs text-[#86868b]">
+        <div class="flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span>
+          <span class="text-white text-[11px] font-medium tracking-wide">LIVE</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 2. Apple Sub-Navigation Bar (Height: 52px, Sticky Frosted Parchment) -->
+  <header class="sticky top-11 z-40 apple-frosted border-b border-apple-hairline/80 px-4 py-2.5">
+    <div class="max-w-5xl mx-auto flex items-center justify-between">
+      <div>
+        <h1 class="text-[17px] md:text-[21px] font-semibold text-apple-ink tracking-tight">
+          실시간 접수 현황
+        </h1>
+        <p id="updated-time-header" class="text-[12px] text-apple-muted -mt-0.5">
+          데이터 로딩 중...
+        </p>
+      </div>
+      
+      <!-- Primary Action: Pill Refresh Button -->
+      <button onclick="loadData(true)" id="refresh-btn" class="apple-btn-primary px-4 py-1.5 text-[13px] flex items-center gap-1.5 shadow-sm">
+        <i id="refresh-icon" class="fa-solid fa-rotate text-[11px]"></i>
+        <span>새로고침</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Canvas -->
+  <main class="max-w-5xl mx-auto w-full px-4 py-8 space-y-12">
+
+    <!-- 3. Key Stat Metrics (Apple Store Style Minimalist Strip) -->
+    <section class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div class="apple-card p-5">
+        <div class="text-[12px] text-apple-muted font-medium mb-1">관리 대학</div>
+        <div class="text-[28px] font-semibold tracking-tight text-apple-ink">
+          9<span class="text-[15px] font-normal text-apple-muted ml-1">개교</span>
+        </div>
+        <div class="text-[11px] text-apple-muted mt-1">선정 6 + 모니터링 3</div>
+      </div>
+
+      <div class="apple-card p-5">
+        <div class="text-[12px] text-apple-muted font-medium mb-1">선정 6개 누적 지원자</div>
+        <div id="metric-top6-applicants" class="text-[28px] font-semibold tracking-tight text-apple-blue">
+          --<span class="text-[15px] font-normal text-apple-muted ml-1">명</span>
+        </div>
+        <div id="metric-top6-quota" class="text-[11px] text-apple-muted mt-1">총 모집정원 53명</div>
+      </div>
+
+      <div class="apple-card p-5">
+        <div class="text-[12px] text-apple-muted font-medium mb-1">선정 6개 평균 경쟁률</div>
+        <div id="metric-top6-rate" class="text-[28px] font-semibold tracking-tight text-apple-ink">
+          -- : 1
+        </div>
+        <div class="text-[11px] text-apple-muted mt-1">실시간 합계 기준</div>
+      </div>
+
+      <div class="apple-card p-5">
+        <div class="text-[12px] text-apple-muted font-medium mb-1">최고 경쟁률 (전체)</div>
+        <div id="metric-highest-rate" class="text-[28px] font-semibold tracking-tight text-apple-ink">
+          -- : 1
+        </div>
+        <div id="metric-highest-univ" class="text-[11px] text-apple-muted mt-1 truncate">
+          집계 중
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Section: 최종 수시 지원 선정 6개 대학 (Core Cards) -->
+    <section>
+      <div class="mb-5 flex items-baseline justify-between">
+        <div>
+          <h2 class="text-[21px] md:text-[24px] font-semibold text-apple-ink tracking-tight">
+            수시 지원 6개 대학
+          </h2>
+          <p class="text-[13px] text-apple-muted mt-0.5">
+            실제 원서접수가 진행 중인 6개 핵심 대학의 실시간 경쟁률
+          </p>
+        </div>
+      </div>
+
+      <!-- 6 Cards Grid (Apple 18px radius utility cards) -->
+      <div id="cards-selected-6" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- JS로 렌더링 -->
+      </div>
+    </section>
+
+    <!-- 5. Section: 시간대별 접수 추이 인터랙티브 차트 -->
+    <section class="apple-card p-6 md:p-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-4 border-b border-apple-hairline">
+        <div>
+          <h2 id="chart-section-title" class="text-[19px] md:text-[21px] font-semibold text-apple-ink tracking-tight">
+            시간대별 지원 추이
+          </h2>
+          <p id="chart-section-desc" class="text-[13px] text-apple-muted mt-0.5">
+            지원자 수(명) 및 실시간 경쟁률(:1) 전환 선택 가능
+          </p>
+        </div>
+
+        <!-- Dual Apple Segmented Controls (지표 선택 & 대학 범위 선택) -->
+        <div class="flex flex-wrap items-center gap-2.5 self-start md:self-auto">
+          <!-- 1. 지표 스위처: 지원자 수 vs 실시간 경쟁률 -->
+          <div class="inline-flex bg-apple-parchment p-1 rounded-apple-pill border border-apple-hairline shadow-inner">
+            <button onclick="setChartMetric('applicants')" id="btn-metric-applicants" class="px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition">
+              지원자 수 (명)
+            </button>
+            <button onclick="setChartMetric('rate')" id="btn-metric-rate" class="px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition">
+              실시간 경쟁률 (:1)
+            </button>
+          </div>
+
+          <!-- 2. 대학 범위 스위처: 선정 6개 vs 전체 9개 -->
+          <div class="inline-flex bg-apple-parchment p-1 rounded-apple-pill border border-apple-hairline shadow-inner">
+            <button onclick="filterChartScope('selected6')" id="btn-chart-sel6" class="px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition">
+              선정 6개
+            </button>
+            <button onclick="filterChartScope('all')" id="btn-chart-all" class="px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition">
+              전체 9개
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative h-[320px] md:h-[400px] w-full">
+        <canvas id="trendChart"></canvas>
+      </div>
+    </section>
+
+    <!-- 6. Section: 기타 모니터링 3개 대학 -->
+    <section>
+      <div class="mb-4">
+        <h2 class="text-[19px] md:text-[21px] font-semibold text-apple-ink tracking-tight">
+          기타 모니터링 대학
+        </h2>
+        <p class="text-[13px] text-apple-muted mt-0.5">
+          경쟁률 추세 비교 및 모니터링 참고용 대학 (3개교)
+        </p>
+      </div>
+
+      <div id="cards-monitoring-3" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- JS로 렌더링 -->
+      </div>
+    </section>
+
+    <!-- 7. Section: 종합 비교 대시보드 테이블 -->
+    <section class="apple-card overflow-hidden">
+      <div class="p-6 border-b border-apple-hairline bg-apple-pearl">
+        <h2 class="text-[17px] md:text-[19px] font-semibold text-apple-ink tracking-tight">
+          대학별 종합 비교
+        </h2>
+        <p class="text-[12px] text-apple-muted mt-0.5">
+          실시간 접수 결과 및 5개년 입시 통계 지표
+        </p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-[13px] text-left border-collapse">
+          <thead>
+            <tr class="border-b border-apple-hairline text-apple-muted text-[11px] font-medium tracking-wider uppercase bg-apple-parchment/60">
+              <th class="py-3 px-4 whitespace-nowrap">구분</th>
+              <th class="py-3 px-3 whitespace-nowrap">발표</th>
+              <th class="py-3 px-4 whitespace-nowrap">대학명</th>
+              <th class="py-3 px-4 whitespace-nowrap">전형명</th>
+              <th class="py-3 px-4 whitespace-nowrap">모집단위</th>
+              <th class="py-3 px-3 text-center whitespace-nowrap">정원</th>
+              <th class="py-3 px-3 text-center whitespace-nowrap">지원자</th>
+              <th class="py-3 px-4 text-center font-semibold text-apple-ink whitespace-nowrap">현재 경쟁률</th>
+              <th class="py-3 px-3 text-center whitespace-nowrap">전년도(2026)</th>
+              <th class="py-3 px-3 text-center whitespace-nowrap">5개년 최소</th>
+              <th class="py-3 px-3 text-center whitespace-nowrap">5개년 평균</th>
+              <th class="py-3 px-4 text-center whitespace-nowrap">공식접수처</th>
+            </tr>
+          </thead>
+          <tbody id="summary-table-body" class="divide-y divide-apple-hairline">
+            <!-- JS로 렌더링 -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 8. Apple Style Footer (Parchment, Dense relaxed links, Legal fine print) -->
+  <footer class="bg-apple-parchment border-t border-apple-hairline text-apple-muted text-[12px] py-10 px-4 mt-16">
+    <div class="max-w-5xl mx-auto space-y-4">
+      <p class="leading-relaxed">
+        * 본 웹 애플리케이션의 실시간 경쟁률 데이터는 각 대학 입학처 및 유웨이어플라이, 진학어플라이의 공식 발표 시스템을 기반으로 자동 수집됩니다. 5분 단위 갱신 주기에 따라 실제 접수 현황과 미세한 시차가 발생할 수 있습니다.
+      </p>
+      <div class="pt-4 border-t border-apple-hairline flex flex-col md:flex-row items-center justify-between text-[11px] text-apple-mutedLight gap-2">
+        <div>Copyright © 2027 수시 경쟁률 예측 프로그램. All rights reserved.</div>
+        <div class="flex items-center space-x-4">
+          <span>단국대 · 동덕여대 · 전남대 · 한남대 · 백석대 · 서울여대</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Client JavaScript Logic -->
+  <script>
+    let rawData = null;
+    let chartInstance = null;
+
+    // Apple Curated Color Palette for Charts
+    const APPLE_CHART_COLORS = [
+      '#0071e3', // Action Blue (단국대)
+      '#bf4800', // Rust/Orange (동덕여대)
+      '#107c41', // Forest Green (전남대)
+      '#6e5494', // Purple (한남대)
+      '#008299', // Cyan/Teal (백석대)
+      '#d9383a', // Red (서울여대)
+      '#86868b', // Space Gray (가톨릭대)
+      '#e3a008', // Amber (충남대)
+      '#343a40'  // Midnight (경기대)
+    ];
+
+    async function loadData(manual = false) {
+      const btn = document.getElementById('refresh-btn');
+      const icon = document.getElementById('refresh-icon');
+      const timeHeader = document.getElementById('updated-time-header');
+      const btnLabel = btn ? btn.querySelector('span') : null;
+
+      if (manual) {
+        icon.classList.add('fa-spin');
+        btn.disabled = true;
+        if (btnLabel) btnLabel.innerText = '실시간 수집 중...';
+      }
+
+      try {
+        let data = null;
+
+        // 수동 새로고침 클릭 시: Vercel Serverless Function(/api/refresh)을 통한 즉시 실시간 크롤링 우선 시도
+        if (manual) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 8000); // 8초 타임아웃
+            const liveRes = await fetch(`/api/refresh?t=${Date.now()}`, { 
+              cache: 'no-store',
+              signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (liveRes.ok) {
+              data = await liveRes.json();
+              console.log('[Live Refresh] 서버리스 실시간 크롤링 데이터 수신 완료:', data.updated_at);
+            }
+          } catch (e) {
+            console.warn('[Live Refresh] 실시간 크롤링 API 응답 지연, records.json으로 폴백:', e);
+          }
+        }
+
+        // 서버리스 미반환 또는 자동 폴링일 때 정적 records.json 로드
+        if (!data) {
+          const res = await fetch(`data/records.json?t=${Date.now()}`, { cache: 'no-store' });
+          if (!res.ok) throw new Error('데이터 로드 실패');
+          data = await res.json();
+        }
+
+        rawData = data;
+        renderDashboard(rawData);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        timeHeader.innerText = '데이터 로딩 실패 (재시도 요망)';
+      } finally {
+        if (manual) {
+          setTimeout(() => {
+            icon.classList.remove('fa-spin');
+            btn.disabled = false;
+            if (btnLabel) btnLabel.innerText = '새로고침';
+          }, 350);
+        }
+      }
+    }
+
+    function renderDashboard(data) {
+      document.getElementById('updated-time-header').innerText = `${data.updated_at} 발표 기준`;
+
+      const univs = data.universities;
+      const top6 = univs.filter(u => u.category.startsWith('지원'));
+      const monitor3 = univs.filter(u => u.category.startsWith('기타'));
+
+      // 1. 핵심 통계 계산
+      const top6Applicants = top6.reduce((acc, u) => acc + u.applicants, 0);
+      const top6Quota = top6.reduce((acc, u) => acc + u.quota, 0);
+      const top6AvgRate = (top6Applicants / top6Quota).toFixed(2);
+
+      document.getElementById('metric-top6-applicants').innerHTML = `${top6Applicants}<span class="text-[15px] font-normal text-apple-muted ml-1">명</span>`;
+      document.getElementById('metric-top6-quota').innerText = `총 모집정원 ${top6Quota}명`;
+      document.getElementById('metric-top6-rate').innerText = `${top6AvgRate} : 1`;
+
+      // 최고 경쟁률 대학
+      const highest = [...univs].sort((a, b) => b.rate - a.rate)[0];
+      if (highest) {
+        document.getElementById('metric-highest-rate').innerText = `${highest.rate.toFixed(2)} : 1`;
+        document.getElementById('metric-highest-univ').innerText = `${highest.univ_name} (${highest.applicants}명)`;
+      }
+
+      // 2. 카드 렌더링
+      renderCards('cards-selected-6', top6, true);
+      renderCards('cards-monitoring-3', monitor3, false);
+
+      // 3. 테이블 렌더링
+      renderTable('summary-table-body', univs);
+
+      // 4. 차트 렌더링
+      renderChart(univs);
+    }
+
+    function renderCards(containerId, list, isHighlight) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+
+      list.forEach((u) => {
+        // 증감 배지: 애플 스타일의 부드러운 텍스트 배지
+        const diffBadge = u.diff > 0 
+          ? `<span class="inline-flex items-center text-[12px] font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
+               +${u.diff}명 증가
+             </span>`
+          : `<span class="inline-flex items-center text-[11px] font-normal text-apple-muted bg-apple-parchment px-2 py-0.5 rounded-full">
+               변동 없음
+             </span>`;
+
+        const badgeClass = isHighlight
+          ? 'bg-apple-ink text-white'
+          : 'bg-apple-parchment text-apple-ink border border-apple-hairline';
+
+        const cardHtml = `
+          <div class="apple-card p-6 flex flex-col justify-between">
+            <div>
+              <!-- Category badge + Time -->
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full whitespace-nowrap inline-flex items-center justify-center ${badgeClass}">
+                  ${u.category}
+                </span>
+                <span class="text-[12px] text-apple-muted font-normal whitespace-nowrap">
+                  ${u.latest_time} 기준
+                </span>
+              </div>
+
+              <!-- University & Major -->
+              <div class="mt-4">
+                <h3 class="text-[20px] font-semibold text-apple-ink tracking-tight">${u.univ_name}</h3>
+                <div class="text-[13px] font-normal text-apple-muted mt-0.5">${u.major}</div>
+                <div class="text-[12px] text-apple-mutedLight mt-0.5">${u.admission}</div>
+              </div>
+
+              <!-- Real-time Rate Display (Apple Large Number Hierarchy) -->
+              <div class="mt-5 p-4 rounded-apple-md bg-apple-parchment/70 border border-apple-hairline/60 flex items-baseline justify-between">
+                <div>
+                  <div class="text-[11px] font-medium text-apple-muted uppercase tracking-wider">실시간 경쟁률</div>
+                  <div class="text-[30px] font-semibold tracking-tight text-apple-ink mt-0.5">${u.rate_str}</div>
+                </div>
+                <div class="text-right">
+                  <div class="text-[13px] font-medium text-apple-ink">${u.applicants}명 <span class="text-apple-muted font-normal text-xs">/ ${u.quota}명</span></div>
+                  <div class="mt-1">${diffBadge}</div>
+                </div>
+              </div>
+
+              <!-- Progress bar against previous year -->
+              <div class="mt-4">
+                <div class="flex justify-between text-[12px] text-apple-muted mb-1.5">
+                  <span>전년도(2026) ${u.prev_year}</span>
+                  <span class="font-medium text-apple-ink">${u.progress_pct}%</span>
+                </div>
+                <div class="w-full h-1.5 rounded-full bg-apple-hairline overflow-hidden">
+                  <div class="h-full rounded-full bg-apple-blue transition-all duration-700" style="width: ${Math.min(u.progress_pct, 100)}%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Link: Apple Text Link with Arrow -->
+            <div class="mt-6 pt-3.5 border-t border-apple-hairline flex items-center justify-between text-[12px]">
+              <span class="text-apple-muted">5개년 평균: <strong class="text-apple-ink font-medium">${u.avg_5yr}</strong></span>
+              <a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-apple-blue hover:text-apple-blueHover font-medium flex items-center gap-1 group">
+                <span>원문 보기</span>
+                <i class="fa-solid fa-chevron-right text-[9px] transition-transform group-hover:translate-x-0.5"></i>
+              </a>
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+      });
+    }
+
+    function renderTable(tbodyId, list) {
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = '';
+
+      list.forEach(u => {
+        const isSelected = u.category.startsWith('지원');
+        const rowBg = isSelected ? 'bg-white hover:bg-apple-parchment/50' : 'bg-apple-parchment/30 hover:bg-apple-parchment/60';
+        const badge = isSelected
+          ? `<span class="px-2.5 py-0.5 rounded-full font-semibold text-[11px] bg-apple-ink text-white whitespace-nowrap inline-flex items-center justify-center">${u.category}</span>`
+          : `<span class="px-2.5 py-0.5 rounded-full font-normal text-[11px] bg-apple-parchment text-apple-muted border border-apple-hairline whitespace-nowrap inline-flex items-center justify-center">${u.category}</span>`;
+
+        const tr = document.createElement('tr');
+        tr.className = `${rowBg} transition`;
+        tr.innerHTML = `
+          <td class="py-3.5 px-4 whitespace-nowrap">${badge}</td>
+          <td class="py-3.5 px-3 font-mono text-apple-muted text-[12px] whitespace-nowrap">${u.latest_time}</td>
+          <td class="py-3.5 px-4 font-semibold text-apple-ink whitespace-nowrap">${u.univ_name}</td>
+          <td class="py-3.5 px-4 text-apple-muted whitespace-nowrap">${u.admission}</td>
+          <td class="py-3.5 px-4 text-apple-ink font-medium whitespace-nowrap">${u.major}</td>
+          <td class="py-3.5 px-3 text-center font-medium text-apple-muted whitespace-nowrap">${u.quota}</td>
+          <td class="py-3.5 px-3 text-center font-semibold text-apple-ink whitespace-nowrap">${u.applicants}</td>
+          <td class="py-3.5 px-4 text-center font-semibold text-apple-blue text-[14px] whitespace-nowrap">${u.rate_str}</td>
+          <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.prev_year}</td>
+          <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.min_5yr}</td>
+          <td class="py-3.5 px-3 text-center text-apple-muted whitespace-nowrap">${u.avg_5yr}</td>
+          <td class="py-3.5 px-4 text-center whitespace-nowrap">
+            <a href="${u.url}" target="_blank" rel="noopener noreferrer" class="text-apple-blue hover:text-apple-blueHover text-[12px] inline-flex items-center gap-1 font-medium whitespace-nowrap">
+              <span>조회</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    let currentMetric = 'applicants'; // 'applicants' | 'rate'
+    let currentScope = 'selected6';   // 'selected6' | 'all'
+
+    function renderChart(univs) {
+      if (!univs) return;
+      const isRate = currentMetric === 'rate';
+
+      const datasets = univs.map((u, i) => {
+        const color = APPLE_CHART_COLORS[i % APPLE_CHART_COLORS.length];
+        
+        // 각 대학의 실제 발표 시각(Time Weight)을 x축 밀리초 타임스탬프로 변환
+        const points = [];
+        if (u.history && u.history.length > 0) {
+          u.history.forEach(h => {
+            if (h.date && h.time) {
+              const dateStr = `${h.date.replace(/-/g, '/')} ${h.time}:00`;
+              const ts = new Date(dateStr).getTime();
+              if (!isNaN(ts)) {
+                points.push({
+                  x: ts,
+                  y: isRate ? h.rate : h.applicants
+                });
+              }
+            }
+          });
+          // 시간순 정렬
+          points.sort((a, b) => a.x - b.x);
+        }
+
+        const isOther = u.category.startsWith('기타');
+        const isHidden = (currentScope === 'selected6') && isOther;
+
+        return {
+          label: isRate ? `${u.alias} (${u.rate_str})` : `${u.alias} (${u.quota}명)`,
+          data: points,
+          borderColor: color,
+          backgroundColor: color,
+          borderWidth: isOther ? 1.5 : 2.5,
+          borderDash: isOther ? [4, 4] : [],
+          tension: 0.15,
+          pointRadius: 3.5,
+          pointHoverRadius: 6.5,
+          hidden: isHidden
+        };
+      });
+
+      const ctx = document.getElementById('trendChart').getContext('2d');
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'nearest',
+            axis: 'x',
+            intersect: false
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                color: '#1d1d1f',
+                font: { family: '-apple-system, BlinkMacSystemFont, Pretendard, sans-serif', size: 12 },
+                boxWidth: 10,
+                padding: 16,
+                usePointStyle: true
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(29, 29, 31, 0.95)',
+              titleColor: '#ffffff',
+              bodyColor: '#e5e5e7',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              borderWidth: 1,
+              padding: 12,
+              boxPadding: 4,
+              cornerRadius: 10,
+              bodyFont: { family: '-apple-system, BlinkMacSystemFont, Pretendard, sans-serif', size: 12 },
+              callbacks: {
+                title: function(context) {
+                  if (!context || !context.length) return '';
+                  const d = new Date(context[0].parsed.x);
+                  const m = String(d.getMonth() + 1).padStart(2, '0');
+                  const day = String(d.getDate()).padStart(2, '0');
+                  const h = String(d.getHours()).padStart(2, '0');
+                  const min = String(d.getMinutes()).padStart(2, '0');
+                  return `${m}/${day} ${h}:${min} 발표 시점`;
+                },
+                label: function(context) {
+                  const val = context.parsed.y;
+                  if (val === null || val === undefined) return '';
+                  const shortName = context.dataset.label.split(' ')[0];
+                  return isRate ? ` ${shortName}: ${val.toFixed(2)} : 1` : ` ${shortName}: ${val}명`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'hour',
+                stepSize: 2,
+                displayFormats: {
+                  hour: 'MM/dd HH:mm',
+                  minute: 'HH:mm'
+                }
+              },
+              grid: { color: 'rgba(0, 0, 0, 0.04)' },
+              ticks: { 
+                color: '#86868b', 
+                font: { size: 11 },
+                maxRotation: 0,
+                autoSkip: true
+              },
+              title: {
+                display: true,
+                text: '발표 일시 (Time-Weighted)',
+                color: '#86868b',
+                font: { size: 11 }
+              }
+            },
+            y: {
+              grid: { color: 'rgba(0, 0, 0, 0.04)' },
+              ticks: { 
+                color: '#86868b', 
+                font: { size: 11 },
+                callback: function(val) {
+                  return isRate ? `${val}:1` : `${val}명`;
+                }
+              },
+              title: {
+                display: true,
+                text: isRate ? '실시간 경쟁률 (:1)' : '누적 지원자 수 (명)',
+                color: '#86868b',
+                font: { size: 12 }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function setChartMetric(metric) {
+      currentMetric = metric;
+      const btnApp = document.getElementById('btn-metric-applicants');
+      const btnRate = document.getElementById('btn-metric-rate');
+      const title = document.getElementById('chart-section-title');
+      const desc = document.getElementById('chart-section-desc');
+
+      if (metric === 'rate') {
+        btnRate.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
+        btnApp.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
+        title.innerText = '시간대별 실시간 경쟁률 추이';
+        desc.innerText = '모집정원 대비 실시간 경쟁률(:1) 변화 흐름';
+      } else {
+        btnApp.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
+        btnRate.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
+        title.innerText = '시간대별 누적 지원자 추이';
+        desc.innerText = '대학별 시간대별 누적 지원 인원(명) 변화 흐름';
+      }
+
+      if (rawData && rawData.universities) {
+        renderChart(rawData.universities);
+      }
+    }
+
+    function filterChartScope(scope) {
+      currentScope = scope;
+      const btnSel6 = document.getElementById('btn-chart-sel6');
+      const btnAll = document.getElementById('btn-chart-all');
+
+      if (scope === 'selected6') {
+        btnSel6.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
+        btnAll.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
+      } else {
+        btnAll.className = 'px-3.5 py-1 text-[12px] font-semibold rounded-apple-pill bg-white text-apple-ink shadow-sm transition';
+        btnSel6.className = 'px-3.5 py-1 text-[12px] font-normal text-apple-muted hover:text-apple-ink rounded-apple-pill transition';
+      }
+
+      if (rawData && rawData.universities) {
+        renderChart(rawData.universities);
+      }
+    }
+
+    // 30분마다 자동 새로고침 (1,800,000ms)
+    setInterval(() => loadData(false), 1800000);
+
+    // 초기 실행
+    document.addEventListener('DOMContentLoaded', () => loadData(false));
+  </script>
+</body>
+</html>
