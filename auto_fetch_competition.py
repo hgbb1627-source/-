@@ -78,7 +78,7 @@ UNIV_CONFIGS = [
         "admission": "학생부교과 지역인재2전형-전북권",
         "major": "의예과",
         "quota": 45,
-        "prev_year": "10.00 : 1",
+        "prev_year": "10.0 : 1",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -93,7 +93,7 @@ UNIV_CONFIGS = [
         "admission": "가천의약학전형",
         "major": "의예과",
         "quota": 16,
-        "prev_year": "40.00 : 1",
+        "prev_year": "40.0 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -108,7 +108,7 @@ UNIV_CONFIGS = [
         "admission": "지역인재종합전형(전북)",
         "major": "의약학 치의예과 (자연)",
         "quota": 18,
-        "prev_year": "6.10 : 1",
+        "prev_year": "6.1 : 1",
         "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
         "enc": "euc-kr",
         "type": "uway",
@@ -138,7 +138,7 @@ UNIV_CONFIGS = [
         "admission": "학생부종합(서류형)",
         "major": "약학과",
         "quota": 15,
-        "prev_year": "35.70 : 1",
+        "prev_year": "35.7 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -213,7 +213,7 @@ UNIV_CONFIGS = [
         "admission": "가천의약학전형",
         "major": "약학과",
         "quota": 10,
-        "prev_year": "50.00 : 1",
+        "prev_year": "50.0 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -314,7 +314,7 @@ def fetch_single_university(cfg):
                         
                         if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
                             app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
                             matched_row = {
                                 "applicants": app,
                                 "rate_str": rate_str
@@ -336,7 +336,7 @@ def fetch_single_university(cfg):
                         q_idx = cells.index(q_str)
                         if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
                             app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
                             matched_row = {"applicants": app, "rate_str": rate_str}
                             break
                 if matched_row:
@@ -438,8 +438,8 @@ def fetch_all():
             t_s = res["time"].strftime("%H:%M")
             quota = cfg["quota"]
             app = res["applicants"]
-            rate = round(app / quota, 2)
-            print(f"  ✓ [{cfg['alias']:<6}] {d_s} {t_s} | 모집: {quota:>2}명 | 지원자: {app:>4}명 | 경쟁률: {rate:.2f} : 1")
+            rate = round(app / quota, 1)
+            print(f"  ✓ [{cfg['alias']:<6}] {d_s} {t_s} | 모집: {quota:>2}명 | 지원자: {app:>4}명 | 경쟁률: {rate:.1f} : 1")
         else:
             # Fallback: 웹 스크래핑 실패 시(해외 IP 차단 등) 엑셀 또는 직전 records.json 기록 유지
             last = excel_records.get(cfg["alias"]) or json_records.get(cfg["alias"])
@@ -452,17 +452,29 @@ def fetch_all():
                     "date": d_obj,
                     "time": t_obj,
                     "applicants": app_cnt,
-                    "rate_str": f"{app_cnt / cfg['quota']:.2f} : 1",
+                    "rate_str": f"{app_cnt / cfg['quota']:.1f} : 1",
                     "is_fallback": True
                 }
                 results.append(fallback_res)
                 d_s = d_obj.strftime("%Y-%m-%d")
                 t_s = t_obj.strftime("%H:%M")
                 quota = cfg["quota"]
-                rate = round(app_cnt / quota, 2)
-                print(f"  [유지] [{cfg['alias']:<6}] 웹 스크래핑 실패로 직전 기록 유지 ({d_s} {t_s} | 지원자 {app_cnt:>4}명 | 경쟁률 {rate:.2f} : 1)")
+                rate = round(app_cnt / quota, 1)
+                print(f"  [유지] [{cfg['alias']:<6}] 웹 스크래핑 실패로 직전 기록 유지 ({d_s} {t_s} | 지원자 {app_cnt:>4}명 | 경쟁률 {rate:.1f} : 1)")
             else:
-                print(f"  [경고] [{cfg['alias']:<6}] 엑셀/JSON에도 기존 기록이 없어 수집 제외됨")
+                # 엑셀/JSON에도 기록이 전혀 없는 경우(한 번도 수집 성공 못 한 대학) —
+                # 목록에서 빼지 않고 0명 플레이스홀더로 표시해서 카드/표가 항상 다 보이게 함
+                placeholder_res = {
+                    "cfg": cfg,
+                    "date": datetime.date.today(),
+                    "time": datetime.time(datetime.datetime.now().hour, datetime.datetime.now().minute),
+                    "applicants": 0,
+                    "rate_str": "집계 대기",
+                    "is_fallback": True,
+                    "is_placeholder": True
+                }
+                results.append(placeholder_res)
+                print(f"  [대기] [{cfg['alias']:<6}] 아직 수집된 데이터가 없어 0명으로 표시(대시보드에는 계속 노출됨)")
     return results
 
 def sync_excel_and_record(fetched_list):
@@ -541,7 +553,7 @@ def sync_excel_and_record(fetched_list):
                 )
 
         diff = cur_app - prev_app
-        rate = round(cur_app / cfg["quota"], 2)
+        rate = round(cur_app / cfg["quota"], 1)
         prev_year_rate = ws["C15"].value or cfg["prev_year"]
 
         update_summary.append({
@@ -636,7 +648,7 @@ def export_records_json(fetched_list):
             last_h = history[-1] if history else None
             is_new_point = (not last_h) or (last_h.get("time") != cur_t_str or last_h.get("date") != cur_d_str)
             if is_new_point and (not last_h or cur_app_val >= last_h.get("applicants", 0)):
-                cur_rate_val = round(cur_app_val / cfg["quota"], 2)
+                cur_rate_val = round(cur_app_val / cfg["quota"], 1)
                 history.append({
                     "date": cur_d_str,
                     "time": cur_t_str,
@@ -650,7 +662,7 @@ def export_records_json(fetched_list):
             diff = history[-1]["applicants"] - history[-2]["applicants"]
 
         cur_app = item["applicants"]
-        cur_rate = round(cur_app / cfg["quota"], 2)
+        cur_rate = round(cur_app / cfg["quota"], 1)
 
         # 전년도 대비 달성률 (%) — 전년도 경쟁률 데이터가 없으면(예: "데이터 없음") 진행률을 계산하지 않고 None 처리
         progress_pct = None
@@ -669,11 +681,12 @@ def export_records_json(fetched_list):
             "applicants": cur_app,
             "diff": diff,
             "rate": cur_rate,
-            "rate_str": f"{cur_rate:.2f} : 1",
+            "rate_str": f"{cur_rate:.1f} : 1",
             "prev_year": cfg["prev_year"],
             "progress_pct": progress_pct,
             "latest_time": cur_t_str,
             "url": cfg["url"],
+            "is_placeholder": item.get("is_placeholder", False),
             "history": history
         })
 
@@ -715,14 +728,14 @@ def update_readme(fetched_list):
         maj = cfg["major"]
         quota = cfg["quota"]
         app = item["applicants"]
-        rate = round(app / quota, 2)
+        rate = round(app / quota, 1)
 
         prev_yr_str = cfg["prev_year"]
 
         if "지원" in cat:
-            row_line = f"| **{cat}** | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} |"
+            row_line = f"| **{cat}** | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.1f} : 1** | {prev_yr_str} |"
         else:
-            row_line = f"| {cat} | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.2f} : 1** | {prev_yr_str} |"
+            row_line = f"| {cat} | **{t_str}** | **{u_name}** | {adm} | {maj} | **{quota}** | **{app}** | **{rate:.1f} : 1** | {prev_yr_str} |"
         rows_text.append(row_line)
 
     new_table = f"### 📊 종합비교 대시보드 실시간 현황 ({now_date_str} {latest_time_str} 기준)\n\n"
@@ -741,6 +754,7 @@ def update_readme(fetched_list):
 def git_commit_and_push(latest_time_str):
     """Git 변경사항 커밋 및 푸시"""
     import subprocess
+    import time
     msg = f"Update admission records automatically ({datetime.date.today().strftime('%Y-%m-%d')} {latest_time_str})"
     print(f"\n[Git 동기화] 커밋 및 푸시 진행 중: '{msg}'")
     try:
@@ -754,8 +768,29 @@ def git_commit_and_push(latest_time_str):
             ["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=BASE_DIR,
             capture_output=True, text=True, check=True
         ).stdout.strip()
-        subprocess.run(["git", "push", "origin", branch], cwd=BASE_DIR, check=True)
-        print(f"  ✓ GitHub 푸시 완료! ({branch} 브랜치)")
+
+        # 푸시 전에 원격 변경사항을 먼저 병합해야 함.
+        # (GitHub Actions나 다른 PC가 먼저 커밋해 두면 그냥 push는 "fetch first" 오류로 영구히 막힘)
+        # 충돌 시에는 -X ours 로 방금 수집한 로컬 데이터를 우선한다.
+        # 원격에만 있는 다른 파일(index.html 등) 변경은 정상적으로 병합되어 들어온다.
+        for attempt in range(3):
+            try:
+                subprocess.run(["git", "fetch", "origin", branch], cwd=BASE_DIR, check=True)
+                merge = subprocess.run(
+                    ["git", "merge", "-X", "ours", "--no-edit", f"origin/{branch}"],
+                    cwd=BASE_DIR, capture_output=True, text=True
+                )
+                if merge.returncode != 0:
+                    print(f"  [Git 알림] 병합 경고: {merge.stdout.strip()} {merge.stderr.strip()}")
+                    subprocess.run(["git", "merge", "--abort"], cwd=BASE_DIR)
+                subprocess.run(["git", "push", "origin", branch], cwd=BASE_DIR, check=True)
+                print(f"  ✓ GitHub 푸시 완료! ({branch} 브랜치)")
+                return
+            except subprocess.CalledProcessError as e:
+                if attempt == 2:
+                    raise
+                print(f"  [Git 재시도 {attempt + 1}/2] 푸시 실패, 원격 변경사항 다시 받아서 재시도합니다...")
+                time.sleep(3)
     except Exception as e:
         print(f"  [Git 오류] Git 작업 실패: {e}")
 

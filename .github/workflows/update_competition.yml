@@ -15,6 +15,10 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          # PC 데몬이 올린 최신 데이터를 확실히 반영한 상태에서 수집하도록 전체 히스토리 체크아웃
+          fetch-depth: 0
+          ref: ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,10 +38,24 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/ README.md auto_fetch_competition.py
+          git add data/ README.md
           if git diff --staged --quiet; then
             echo "No changes detected. Skipping commit."
-          else
-            git commit -m "Auto update admission records (GitHub Actions) [skip ci]"
-            git push origin HEAD:${{ github.ref_name }}
+            exit 0
           fi
+          git commit -m "Auto update admission records (GitHub Actions) [skip ci]"
+          # PC 데몬이 그 사이에 푸시했을 수 있으므로, 푸시 전에 원격을 받아 병합한다.
+          # 충돌 시 -X ours 로 이번 실행 결과를 우선하되, PC가 수집한 진학사 값은
+          # auto_fetch_competition.py의 JSON 폴백이 이미 유지하고 있으므로 유실되지 않는다.
+          for i in 1 2 3; do
+            git fetch origin ${{ github.ref_name }} || true
+            git merge -X ours --no-edit origin/${{ github.ref_name }} || git merge --abort || true
+            if git push origin HEAD:${{ github.ref_name }}; then
+              echo "Push succeeded on attempt $i"
+              exit 0
+            fi
+            echo "Push failed on attempt $i, retrying after fetch/merge..."
+            sleep 5
+          done
+          echo "Push failed after 3 attempts"
+          exit 1

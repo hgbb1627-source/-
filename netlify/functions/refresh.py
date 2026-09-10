@@ -45,7 +45,7 @@ UNIV_CONFIGS = [
         "admission": "학생부교과 지역인재2전형-전북권",
         "major": "의예과",
         "quota": 45,
-        "prev_year": "10.00 : 1",
+        "prev_year": "10.0 : 1",
         "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
         "enc": "euc-kr",
         "type": "uway",
@@ -60,7 +60,7 @@ UNIV_CONFIGS = [
         "admission": "가천의약학전형",
         "major": "의예과",
         "quota": 16,
-        "prev_year": "40.00 : 1",
+        "prev_year": "40.0 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -75,7 +75,7 @@ UNIV_CONFIGS = [
         "admission": "지역인재종합전형(전북)",
         "major": "의약학 치의예과 (자연)",
         "quota": 18,
-        "prev_year": "6.10 : 1",
+        "prev_year": "6.1 : 1",
         "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
         "enc": "euc-kr",
         "type": "uway",
@@ -105,7 +105,7 @@ UNIV_CONFIGS = [
         "admission": "학생부종합(서류형)",
         "major": "약학과",
         "quota": 15,
-        "prev_year": "35.70 : 1",
+        "prev_year": "35.7 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -180,7 +180,7 @@ UNIV_CONFIGS = [
         "admission": "가천의약학전형",
         "major": "약학과",
         "quota": 10,
-        "prev_year": "50.00 : 1",
+        "prev_year": "50.0 : 1",
         "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
         "enc": "utf-8",
         "type": "jinhak",
@@ -276,7 +276,7 @@ def fetch_single(cfg):
 
                         if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
                             app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
                             matched_row = {
                                 "applicants": app,
                                 "rate_str": rate_str
@@ -297,7 +297,7 @@ def fetch_single(cfg):
                         q_idx = cells.index(q_str)
                         if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
                             app = int(cells[q_idx + 1])
-                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.1f} : 1"
                             matched_row = {"applicants": app, "rate_str": rate_str}
                             break
                 if matched_row:
@@ -347,7 +347,7 @@ def handler(event, context):
         live_res = fetch_single(cfg)
         if live_res:
             cur_app = live_res["applicants"]
-            cur_rate = round(cur_app / cfg["quota"], 2)
+            cur_rate = round(cur_app / cfg["quota"], 1)
             t_str = live_res["time"].strftime("%H:%M")
             d_str = live_res["date"].strftime("%Y-%m-%d")
 
@@ -398,7 +398,7 @@ def handler(event, context):
                 "applicants": cur_app,
                 "diff": diff,
                 "rate": cur_rate,
-                "rate_str": f"{cur_rate:.2f} : 1",
+                "rate_str": f"{cur_rate:.1f} : 1",
                 "prev_year": cfg["prev_year"],
                 "progress_pct": progress_pct,
                 "latest_time": t_str,
