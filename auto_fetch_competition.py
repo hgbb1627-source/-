@@ -25,6 +25,7 @@ import argparse
 import datetime
 import shutil
 import urllib.request
+import http.cookiejar
 from bs4 import BeautifulSoup
 import openpyxl
 from openpyxl.styles import Font, Alignment
@@ -238,105 +239,122 @@ def parse_time_from_soup(soup):
             return date_obj, time_obj
     return None, None
 
+_BROWSER_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+def _fetch_html_with_session(url, timeout=10):
+    """쿠키 세션을 유지한 채로 대상 사이트 루트를 먼저 방문(세션 쿠키 확보) 후
+    실제 페이지를 요청 — 진학사 등 세션/쿠키 기반 봇 차단 회피 시도"""
+    domain_root = "https://" + url.split("/")[2] + "/"
+    common_headers = {
+        "User-Agent": _BROWSER_UA,
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1"
+    }
+    cookie_jar = http.cookiejar.CookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+
+    try:
+        warmup_req = urllib.request.Request(domain_root, headers=common_headers)
+        opener.open(warmup_req, timeout=timeout)
+    except Exception:
+        pass  # 워밍업 실패해도 본 요청은 시도
+
+    req = urllib.request.Request(url, headers={**common_headers, "Referer": domain_root})
+    with opener.open(req, timeout=timeout) as resp:
+        return resp.read()
+
 def fetch_single_university(cfg):
     """단일 대학 웹페이지를 스크래핑하여 최신 수치 딕셔너리 반환"""
-    req = urllib.request.Request(
-        cfg["url"],
-        headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-            "Referer": "https://" + cfg["url"].split("/")[2] + "/"
-        }
-    )
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            raw = resp.read()
-            try:
-                html = raw.decode(cfg["enc"])
-            except Exception:
-                html = raw.decode("euc-kr", errors="replace")
-            soup = BeautifulSoup(html, "html.parser")
-            
-            date_obj, time_obj = parse_time_from_soup(soup)
-            
-            target_adm = cfg["target_admission_match"]
-            target_maj = cfg["target_major_match"]
-            
-            matched_row = None
+        raw = _fetch_html_with_session(cfg["url"])
+        try:
+            html = raw.decode(cfg["enc"])
+        except Exception:
+            html = raw.decode("euc-kr", errors="replace")
+
+        soup = BeautifulSoup(html, "html.parser")
+        
+        date_obj, time_obj = parse_time_from_soup(soup)
+        
+        target_adm = cfg["target_admission_match"]
+        target_maj = cfg["target_major_match"]
+        
+        matched_row = None
+        for table in soup.find_all("table"):
+            headers = []
+            curr = table
+            while curr and len(headers) < 4:
+                curr = curr.find_previous(["h1", "h2", "h3", "h4", "caption", "div", "span", "p"])
+                if curr:
+                    t = curr.get_text().strip()
+                    if any(k in t for k in ["전형", "모집", "현황", "경쟁률"]) and len(t) < 60:
+                        headers.append(t)
+            header_text = " ".join(headers)
+
+            if target_adm and target_adm not in header_text:
+                table_first_col = " ".join(
+                    [tr.find(["td", "th"]).get_text() for tr in table.find_all("tr") if tr.find(["td", "th"])]
+                )
+                if target_adm not in table_first_col:
+                    continue
+
+            for tr in table.find_all("tr"):
+                cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
+                row_str = " ".join(cells)
+                if target_maj in row_str:
+                    nums = [c for c in cells if c.isdigit()]
+                    if len(nums) >= 2:
+                        q_str = str(cfg["quota"])
+                        if q_str in cells:
+                            q_idx = cells.index(q_str)
+                        else:
+                            q_idx = cells.index(nums[-2])
+                        
+                        if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
+                            app = int(cells[q_idx + 1])
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            matched_row = {
+                                "applicants": app,
+                                "rate_str": rate_str
+                            }
+                            break
+            if matched_row:
+                break
+
+        # 1차 매칭 실패 시: 전형명(target_adm)으로 표를 좁히지 않고, 모집단위명 + 정원 숫자
+        # 일치만으로 전체 표를 다시 훑는 완화된 2차 매칭 (한 URL에 여러 전형이 섞여 있어
+        # 전형명 문구가 실제 페이지와 미세하게 달라 표 단계에서 걸러지는 경우를 구제)
+        if not matched_row:
+            q_str = str(cfg["quota"])
             for table in soup.find_all("table"):
-                headers = []
-                curr = table
-                while curr and len(headers) < 4:
-                    curr = curr.find_previous(["h1", "h2", "h3", "h4", "caption", "div", "span", "p"])
-                    if curr:
-                        t = curr.get_text().strip()
-                        if any(k in t for k in ["전형", "모집", "현황", "경쟁률"]) and len(t) < 60:
-                            headers.append(t)
-                header_text = " ".join(headers)
-
-                if target_adm and target_adm not in header_text:
-                    table_first_col = " ".join(
-                        [tr.find(["td", "th"]).get_text() for tr in table.find_all("tr") if tr.find(["td", "th"])]
-                    )
-                    if target_adm not in table_first_col:
-                        continue
-
                 for tr in table.find_all("tr"):
                     cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
                     row_str = " ".join(cells)
-                    if target_maj in row_str:
-                        nums = [c for c in cells if c.isdigit()]
-                        if len(nums) >= 2:
-                            q_str = str(cfg["quota"])
-                            if q_str in cells:
-                                q_idx = cells.index(q_str)
-                            else:
-                                q_idx = cells.index(nums[-2])
-                            
-                            if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
-                                app = int(cells[q_idx + 1])
-                                rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
-                                matched_row = {
-                                    "applicants": app,
-                                    "rate_str": rate_str
-                                }
-                                break
+                    if target_maj in row_str and q_str in cells:
+                        q_idx = cells.index(q_str)
+                        if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
+                            app = int(cells[q_idx + 1])
+                            rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                            matched_row = {"applicants": app, "rate_str": rate_str}
+                            break
                 if matched_row:
                     break
+            if matched_row:
+                print(f"[알림] [{cfg['alias']}] 완화된 2차 매칭으로 찾음 (target_admission_match 확인 권장)")
 
-            # 1차 매칭 실패 시: 전형명(target_adm)으로 표를 좁히지 않고, 모집단위명 + 정원 숫자
-            # 일치만으로 전체 표를 다시 훑는 완화된 2차 매칭 (한 URL에 여러 전형이 섞여 있어
-            # 전형명 문구가 실제 페이지와 미세하게 달라 표 단계에서 걸러지는 경우를 구제)
-            if not matched_row:
-                q_str = str(cfg["quota"])
-                for table in soup.find_all("table"):
-                    for tr in table.find_all("tr"):
-                        cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
-                        row_str = " ".join(cells)
-                        if target_maj in row_str and q_str in cells:
-                            q_idx = cells.index(q_str)
-                            if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
-                                app = int(cells[q_idx + 1])
-                                rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
-                                matched_row = {"applicants": app, "rate_str": rate_str}
-                                break
-                    if matched_row:
-                        break
-                if matched_row:
-                    print(f"[알림] [{cfg['alias']}] 완화된 2차 매칭으로 찾음 (target_admission_match 확인 권장)")
+        if not matched_row:
+            print(f"[경고] [{cfg['alias']}] 타겟 학과/전형 행 매칭 실패")
+            return None
 
-            if not matched_row:
-                print(f"[경고] [{cfg['alias']}] 타겟 학과/전형 행 매칭 실패")
-                return None
-
-            return {
-                "cfg": cfg,
-                "date": date_obj or datetime.date.today(),
-                "time": time_obj or datetime.time(datetime.datetime.now().hour, 0),
-                "applicants": matched_row["applicants"],
-                "rate_str": matched_row["rate_str"]
-            }
+        return {
+            "cfg": cfg,
+            "date": date_obj or datetime.date.today(),
+            "time": time_obj or datetime.time(datetime.datetime.now().hour, 0),
+            "applicants": matched_row["applicants"],
+            "rate_str": matched_row["rate_str"]
+        }
 
     except Exception as e:
         print(f"[오류] [{cfg['alias']}] 웹페이지 요청 또는 파싱 실패: {e}")
