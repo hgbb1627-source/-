@@ -685,12 +685,24 @@ def export_records_json(fetched_list):
                     })
         else:
             # JSON 히스토리 폴백: 직전 기록을 이어받고, 새 시점/증가분만 추가
-            history = list(json_history_fallback.get(alias, []))
+            history = [dict(h) for h in json_history_fallback.get(alias, [])]
             cur_app_val = item["applicants"]
+            cur_rate_val = round(cur_app_val / cfg["quota"], 1)
+
+            # 실제 수치가 수집되면 과거의 0명(집계 대기) 기록은 정리
+            if cur_app_val > 0:
+                history = [h for h in history if h.get("applicants", 0) > 0]
+
             last_h = history[-1] if history else None
-            is_new_point = (not last_h) or (last_h.get("time") != cur_t_str or last_h.get("date") != cur_d_str)
-            if is_new_point and (not last_h or cur_app_val >= last_h.get("applicants", 0)):
-                cur_rate_val = round(cur_app_val / cfg["quota"], 1)
+            same_point = bool(last_h) and last_h.get("time") == cur_t_str and last_h.get("date") == cur_d_str
+
+            if same_point:
+                # 같은 발표시각인데 값이 다르면(이전 수집이 잘못된 행을 읽은 경우 등)
+                # 기존 기록을 새로 수집한 값으로 정정한다.
+                if last_h.get("applicants") != cur_app_val:
+                    last_h["applicants"] = cur_app_val
+                    last_h["rate"] = cur_rate_val
+            elif (not last_h) or cur_app_val >= last_h.get("applicants", 0):
                 history.append({
                     "date": cur_d_str,
                     "time": cur_t_str,
