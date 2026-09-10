@@ -376,7 +376,7 @@
       // 1. 핵심 통계 계산
       const top6Applicants = top6.reduce((acc, u) => acc + u.applicants, 0);
       const top6Quota = top6.reduce((acc, u) => acc + u.quota, 0);
-      const top6AvgRate = (top6Applicants / top6Quota).toFixed(2);
+      const top6AvgRate = (top6Applicants / top6Quota).toFixed(1);
 
       document.getElementById('metric-top6-applicants').innerHTML = `${top6Applicants}<span class="text-[15px] font-normal text-apple-muted ml-1">명</span>`;
       document.getElementById('metric-top6-quota').innerText = `총 모집정원 ${top6Quota}명`;
@@ -385,7 +385,7 @@
       // 최고 경쟁률 대학
       const highest = [...univs].sort((a, b) => b.rate - a.rate)[0];
       if (highest) {
-        document.getElementById('metric-highest-rate').innerText = `${highest.rate.toFixed(2)} : 1`;
+        document.getElementById('metric-highest-rate').innerText = `${highest.rate.toFixed(1)} : 1`;
         document.getElementById('metric-highest-univ').innerText = `${highest.univ_name} (${highest.applicants}명)`;
       }
 
@@ -415,6 +415,10 @@
           ? 'bg-apple-ink text-white'
           : 'bg-apple-parchment text-apple-ink border border-apple-hairline';
 
+        // 주력 지원 2개(전북대 지역인재2전형-전북권 / 원광대 치의예과)는 대학명 옆에 별표 표시
+        const isPrimaryPick = (u.alias === '전북대-지역인재2전북권' || u.alias === '원광대-의약학치의예과');
+        const starMark = isPrimaryPick ? '<span class="text-apple-blue ml-1" title="주력 지원">★</span>' : '';
+
         const cardHtml = `
           <div class="apple-card p-6 flex flex-col justify-between">
             <div>
@@ -430,8 +434,8 @@
 
               <!-- University & Major -->
               <div class="mt-4">
-                <h3 class="text-[20px] font-semibold text-apple-ink tracking-tight">${u.univ_name}</h3>
-                <div class="text-[13px] font-normal text-apple-muted mt-0.5">${u.major}</div>
+                <h3 class="text-[20px] font-semibold text-apple-ink tracking-tight">${u.univ_name}${starMark}</h3>
+                <div class="text-[16px] font-medium text-apple-ink mt-0.5">${u.major}</div>
                 <div class="text-[12px] text-apple-mutedLight mt-0.5">${u.admission}</div>
               </div>
 
@@ -485,12 +489,15 @@
           ? `<span class="px-2.5 py-0.5 rounded-full font-semibold text-[11px] bg-apple-ink text-white whitespace-nowrap inline-flex items-center justify-center">${u.category}</span>`
           : `<span class="px-2.5 py-0.5 rounded-full font-normal text-[11px] bg-apple-parchment text-apple-muted border border-apple-hairline whitespace-nowrap inline-flex items-center justify-center">${u.category}</span>`;
 
+        const isPrimaryPick = (u.alias === '전북대-지역인재2전북권' || u.alias === '원광대-의약학치의예과');
+        const starMark = isPrimaryPick ? '<span class="text-apple-blue ml-1" title="주력 지원">★</span>' : '';
+
         const tr = document.createElement('tr');
         tr.className = `${rowBg} transition`;
         tr.innerHTML = `
           <td class="py-3.5 px-4 whitespace-nowrap">${badge}</td>
           <td class="py-3.5 px-3 font-mono text-apple-muted text-[12px] whitespace-nowrap">${u.latest_time}</td>
-          <td class="py-3.5 px-4 font-semibold text-apple-ink whitespace-nowrap">${u.univ_name}</td>
+          <td class="py-3.5 px-4 font-semibold text-apple-ink whitespace-nowrap">${u.univ_name}${starMark}</td>
           <td class="py-3.5 px-4 text-apple-muted whitespace-nowrap">${u.admission}</td>
           <td class="py-3.5 px-4 text-apple-ink font-medium whitespace-nowrap">${u.major}</td>
           <td class="py-3.5 px-3 text-center font-medium text-apple-muted whitespace-nowrap">${u.quota}</td>
