@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 23:40",
+  "updated_at": "2026-09-11 17:00",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -10,12 +10,12 @@
       "major": "의예과",
       "quota": 9,
       "applicants": 183,
-      "diff": 1,
+      "diff": 0,
       "rate": 20.3,
       "rate_str": "20.3 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -340,6 +340,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 183,
           "rate": 20.3
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 183,
+          "rate": 20.3
         }
       ]
     },
@@ -351,12 +358,12 @@
       "major": "의예과",
       "quota": 45,
       "applicants": 406,
-      "diff": 2,
+      "diff": 0,
       "rate": 9.0,
       "rate_str": "9.0 : 1",
       "prev_year": "10.0 : 1",
       "progress_pct": 90.0,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -660,6 +667,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 406,
           "rate": 9.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 406,
+          "rate": 9.0
         }
       ]
     },
@@ -670,13 +684,13 @@
       "admission": "가천의약학전형",
       "major": "의예과",
       "quota": 16,
-      "applicants": 425,
+      "applicants": 427,
       "diff": 2,
-      "rate": 26.6,
-      "rate_str": "26.6 : 1",
+      "rate": 26.7,
+      "rate_str": "26.7 : 1",
       "prev_year": "40.0 : 1",
-      "progress_pct": 66.5,
-      "latest_time": "00:10",
+      "progress_pct": 66.8,
+      "latest_time": "00:20",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -1022,6 +1036,13 @@
           "datetime_label": "09-11 00:10",
           "applicants": 425,
           "rate": 26.6
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 427,
+          "rate": 26.7
         }
       ]
     },
@@ -1032,13 +1053,13 @@
       "admission": "지역인재종합전형(전북)",
       "major": "의약학 치의예과 (자연)",
       "quota": 18,
-      "applicants": 97,
-      "diff": 0,
+      "applicants": 98,
+      "diff": 1,
       "rate": 5.4,
       "rate_str": "5.4 : 1",
       "prev_year": "6.1 : 1",
       "progress_pct": 88.5,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -1342,6 +1363,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 97,
           "rate": 5.4
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 98,
+          "rate": 5.4
         }
       ]
     },
@@ -1459,7 +1487,7 @@
       "rate_str": "14.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1798,6 +1826,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 58,
           "rate": 14.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 58,
+          "rate": 14.5
         }
       ]
     },
@@ -1809,12 +1844,12 @@
       "major": "의예과",
       "quota": 6,
       "applicants": 97,
-      "diff": 2,
+      "diff": 0,
       "rate": 16.2,
       "rate_str": "16.2 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -2125,6 +2160,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 97,
           "rate": 16.2
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 97,
+          "rate": 16.2
         }
       ]
     },
@@ -2141,7 +2183,7 @@
       "rate_str": "6.7 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -2466,6 +2508,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 47,
           "rate": 6.7
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 47,
+          "rate": 6.7
         }
       ]
     },
@@ -2482,7 +2531,7 @@
       "rate_str": "11.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "23:40",
+      "latest_time": "00:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -2807,6 +2856,13 @@
           "datetime_label": "09-10 23:40",
           "applicants": 47,
           "rate": 11.8
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 47,
+          "rate": 11.8
         }
       ]
     },
@@ -2817,13 +2873,13 @@
       "admission": "가천의약학전형",
       "major": "약학과",
       "quota": 10,
-      "applicants": 342,
+      "applicants": 343,
       "diff": 1,
-      "rate": 34.2,
-      "rate_str": "34.2 : 1",
+      "rate": 34.3,
+      "rate_str": "34.3 : 1",
       "prev_year": "50.0 : 1",
-      "progress_pct": 68.4,
-      "latest_time": "00:10",
+      "progress_pct": 68.6,
+      "latest_time": "00:20",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -3169,6 +3225,13 @@
           "datetime_label": "09-11 00:10",
           "applicants": 342,
           "rate": 34.2
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:20",
+          "datetime_label": "09-11 00:20",
+          "applicants": 343,
+          "rate": 34.3
         }
       ]
     }
