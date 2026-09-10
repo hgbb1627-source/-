@@ -243,7 +243,10 @@ def fetch_single_university(cfg):
     req = urllib.request.Request(
         cfg["url"],
         headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Referer": "https://" + cfg["url"].split("/")[2] + "/"
         }
     )
     try:
@@ -301,6 +304,27 @@ def fetch_single_university(cfg):
                                 break
                 if matched_row:
                     break
+
+            # 1차 매칭 실패 시: 전형명(target_adm)으로 표를 좁히지 않고, 모집단위명 + 정원 숫자
+            # 일치만으로 전체 표를 다시 훑는 완화된 2차 매칭 (한 URL에 여러 전형이 섞여 있어
+            # 전형명 문구가 실제 페이지와 미세하게 달라 표 단계에서 걸러지는 경우를 구제)
+            if not matched_row:
+                q_str = str(cfg["quota"])
+                for table in soup.find_all("table"):
+                    for tr in table.find_all("tr"):
+                        cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
+                        row_str = " ".join(cells)
+                        if target_maj in row_str and q_str in cells:
+                            q_idx = cells.index(q_str)
+                            if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
+                                app = int(cells[q_idx + 1])
+                                rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                                matched_row = {"applicants": app, "rate_str": rate_str}
+                                break
+                    if matched_row:
+                        break
+                if matched_row:
+                    print(f"[알림] [{cfg['alias']}] 완화된 2차 매칭으로 찾음 (target_admission_match 확인 권장)")
 
             if not matched_row:
                 print(f"[경고] [{cfg['alias']}] 타겟 학과/전형 행 매칭 실패")
@@ -695,7 +719,10 @@ def main():
                 print(f"\n[{now_str}] 정기 수집 가동...")
                 fetched = fetch_all()
                 if fetched:
-                    sync_excel_and_record(fetched)
+                    try:
+                        sync_excel_and_record(fetched)
+                    except Exception as e:
+                        print(f"[알림] 엑셀 동기화 생략(로컬/구글드라이브 파일 없음 등): {e}")
                     update_readme(fetched)
                     export_records_json(fetched)
                     latest_t = max([item["time"].strftime("%H:%M") for item in fetched])
@@ -720,7 +747,13 @@ def main():
         return
 
     if args.save:
-        sync_excel_and_record(fetched)
+        # 엑셀 동기화는 로컬/구글 드라이브 파일이 있을 때만 의미가 있는 보조 기능입니다.
+        # GitHub Actions 등 클라우드 환경에는 그 파일이 없으므로 실패해도 무시하고
+        # 웹 대시보드가 실제로 읽는 README/JSON 갱신과 git push는 계속 진행합니다.
+        try:
+            sync_excel_and_record(fetched)
+        except Exception as e:
+            print(f"[알림] 엑셀 동기화 생략(로컬/구글드라이브 파일 없음 등): {e}")
         update_readme(fetched)
         export_records_json(fetched)
 

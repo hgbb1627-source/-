@@ -210,7 +210,10 @@ def fetch_single(cfg):
     req = urllib.request.Request(
         cfg["url"],
         headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Referer": "https://" + cfg["url"].split("/")[2] + "/"
         }
     )
     try:
@@ -267,6 +270,24 @@ def fetch_single(cfg):
                                 break
                 if matched_row:
                     break
+
+            # 1차 매칭 실패 시: 전형명으로 표를 좁히지 않고 모집단위명 + 정원 숫자 일치만으로
+            # 전체 표를 다시 훑는 완화된 2차 매칭
+            if not matched_row:
+                q_str = str(cfg["quota"])
+                for table in soup.find_all("table"):
+                    for tr in table.find_all("tr"):
+                        cells = [td.get_text().strip() for td in tr.find_all(["td", "th"])]
+                        row_str = " ".join(cells)
+                        if target_maj in row_str and q_str in cells:
+                            q_idx = cells.index(q_str)
+                            if q_idx + 1 < len(cells) and cells[q_idx + 1].isdigit():
+                                app = int(cells[q_idx + 1])
+                                rate_str = cells[q_idx + 2] if q_idx + 2 < len(cells) else f"{app / cfg['quota']:.2f} : 1"
+                                matched_row = {"applicants": app, "rate_str": rate_str}
+                                break
+                    if matched_row:
+                        break
 
             if matched_row:
                 return {
