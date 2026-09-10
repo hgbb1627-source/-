@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-10 23:50",
+  "updated_at": "2026-09-11 23:40",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -670,13 +670,13 @@
       "admission": "가천의약학전형",
       "major": "의예과",
       "quota": 16,
-      "applicants": 420,
-      "diff": 4,
-      "rate": 26.2,
-      "rate_str": "26.2 : 1",
+      "applicants": 423,
+      "diff": 3,
+      "rate": 26.4,
+      "rate_str": "26.4 : 1",
       "prev_year": "40.0 : 1",
-      "progress_pct": 65.5,
-      "latest_time": "23:50",
+      "progress_pct": 66.0,
+      "latest_time": "00:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -1008,6 +1008,13 @@
           "datetime_label": "09-10 23:50",
           "applicants": 420,
           "rate": 26.2
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:00",
+          "datetime_label": "09-11 00:00",
+          "applicants": 423,
+          "rate": 26.4
         }
       ]
     },
@@ -1364,13 +1371,13 @@
       "admission": "학생부종합(서류형)",
       "major": "약학과",
       "quota": 15,
-      "applicants": 385,
-      "diff": 18,
-      "rate": 25.7,
-      "rate_str": "25.7 : 1",
+      "applicants": 400,
+      "diff": 15,
+      "rate": 26.7,
+      "rate_str": "26.7 : 1",
       "prev_year": "35.7 : 1",
-      "progress_pct": 72.0,
-      "latest_time": "23:00",
+      "progress_pct": 74.8,
+      "latest_time": "00:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
       "is_placeholder": false,
       "history": [
@@ -1422,6 +1429,13 @@
           "datetime_label": "09-10 23:00",
           "applicants": 385,
           "rate": 25.7
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:00",
+          "datetime_label": "09-11 00:00",
+          "applicants": 400,
+          "rate": 26.7
         }
       ]
     },
@@ -2796,13 +2810,13 @@
       "admission": "가천의약학전형",
       "major": "약학과",
       "quota": 10,
-      "applicants": 339,
+      "applicants": 341,
       "diff": 2,
-      "rate": 33.9,
-      "rate_str": "33.9 : 1",
+      "rate": 34.1,
+      "rate_str": "34.1 : 1",
       "prev_year": "50.0 : 1",
-      "progress_pct": 67.8,
-      "latest_time": "23:50",
+      "progress_pct": 68.2,
+      "latest_time": "00:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -3134,6 +3148,13 @@
           "datetime_label": "09-10 23:50",
           "applicants": 339,
           "rate": 33.9
+        },
+        {
+          "date": "2026-09-11",
+          "time": "00:00",
+          "datetime_label": "09-11 00:00",
+          "applicants": 341,
+          "rate": 34.1
         }
       ]
     }
