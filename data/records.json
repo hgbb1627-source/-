@@ -49,13 +49,6 @@
         },
         {
           "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 160,
-          "rate": 17.78
-        },
-        {
-          "date": "2026-09-10",
           "time": "16:40",
           "datetime_label": "09-10 16:40",
           "applicants": 160,
@@ -177,13 +170,6 @@
           "datetime_label": "09-10 15:00",
           "applicants": 357,
           "rate": 7.93
-        },
-        {
-          "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 369,
-          "rate": 8.2
         },
         {
           "date": "2026-09-10",
@@ -421,13 +407,6 @@
         },
         {
           "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 81,
-          "rate": 4.5
-        },
-        {
-          "date": "2026-09-10",
           "time": "17:20",
           "datetime_label": "09-10 17:20",
           "applicants": 81,
@@ -583,13 +562,6 @@
         },
         {
           "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 15,
-          "rate": 3.75
-        },
-        {
-          "date": "2026-09-10",
           "time": "16:30",
           "datetime_label": "09-10 16:30",
           "applicants": 15,
@@ -735,13 +707,6 @@
         },
         {
           "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 84,
-          "rate": 14.0
-        },
-        {
-          "date": "2026-09-10",
           "time": "17:20",
           "datetime_label": "09-10 17:20",
           "applicants": 84,
@@ -842,13 +807,6 @@
           "datetime_label": "09-10 15:00",
           "applicants": 36,
           "rate": 5.14
-        },
-        {
-          "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 41,
-          "rate": 5.86
         },
         {
           "date": "2026-09-10",
@@ -973,13 +931,6 @@
           "datetime_label": "09-10 15:00",
           "applicants": 36,
           "rate": 9.0
-        },
-        {
-          "date": "2026-09-10",
-          "time": "17:10",
-          "datetime_label": "09-10 17:10",
-          "applicants": 41,
-          "rate": 10.25
         },
         {
           "date": "2026-09-10",
