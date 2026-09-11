@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 15:30",
+  "updated_at": "2026-09-11 16:00",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -9,13 +9,13 @@
       "admission": "학생부교과 지역의사선발전형-전주권",
       "major": "의예과",
       "quota": 9,
-      "applicants": 211,
+      "applicants": 212,
       "diff": 1,
-      "rate": 23.4,
-      "rate_str": "23.4 : 1",
+      "rate": 23.6,
+      "rate_str": "23.6 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "15:30",
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -795,6 +795,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 211,
           "rate": 23.4
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 212,
+          "rate": 23.6
         }
       ]
     },
@@ -805,13 +812,13 @@
       "admission": "학생부교과 지역인재2전형-전북권",
       "major": "의예과",
       "quota": 45,
-      "applicants": 439,
-      "diff": 1,
-      "rate": 9.8,
-      "rate_str": "9.8 : 1",
+      "applicants": 445,
+      "diff": 6,
+      "rate": 9.9,
+      "rate_str": "9.9 : 1",
       "prev_year": "10.0 : 1",
-      "progress_pct": 98.0,
-      "latest_time": "15:30",
+      "progress_pct": 99.0,
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1584,6 +1591,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 439,
           "rate": 9.8
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 445,
+          "rate": 9.9
         }
       ]
     },
@@ -2369,13 +2383,13 @@
       "admission": "지역인재종합전형(전북)",
       "major": "의약학 치의예과 (자연)",
       "quota": 18,
-      "applicants": 124,
-      "diff": 2,
-      "rate": 6.9,
-      "rate_str": "6.9 : 1",
+      "applicants": 128,
+      "diff": 4,
+      "rate": 7.1,
+      "rate_str": "7.1 : 1",
       "prev_year": "6.1 : 1",
-      "progress_pct": 113.1,
-      "latest_time": "15:30",
+      "progress_pct": 116.4,
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3148,6 +3162,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 124,
           "rate": 6.9
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 128,
+          "rate": 7.1
         }
       ]
     },
@@ -3371,13 +3392,13 @@
       "admission": "학생부종합 지역인재2유형전형-전북권",
       "major": "의예과",
       "quota": 4,
-      "applicants": 64,
-      "diff": 0,
-      "rate": 16.0,
-      "rate_str": "16.0 : 1",
+      "applicants": 66,
+      "diff": 2,
+      "rate": 16.5,
+      "rate_str": "16.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "15:30",
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -4185,6 +4206,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 64,
           "rate": 16.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 66,
+          "rate": 16.5
         }
       ]
     },
@@ -4195,13 +4223,13 @@
       "admission": "학생부교과 지역의사선발전형-광역권",
       "major": "의예과",
       "quota": 6,
-      "applicants": 126,
-      "diff": 1,
-      "rate": 21.0,
-      "rate_str": "21.0 : 1",
+      "applicants": 129,
+      "diff": 3,
+      "rate": 21.5,
+      "rate_str": "21.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "15:30",
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -4981,6 +5009,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 126,
           "rate": 21.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 129,
+          "rate": 21.5
         }
       ]
     },
@@ -4991,13 +5026,13 @@
       "admission": "지역의사선발전형 진료권-전주권",
       "major": "의예과",
       "quota": 7,
-      "applicants": 62,
-      "diff": 2,
-      "rate": 8.9,
-      "rate_str": "8.9 : 1",
+      "applicants": 63,
+      "diff": 1,
+      "rate": 9.0,
+      "rate_str": "9.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "15:30",
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -5791,6 +5826,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 62,
           "rate": 8.9
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 63,
+          "rate": 9.0
         }
       ]
     },
@@ -5801,13 +5843,13 @@
       "admission": "지역의사선발전형 진료권-광역권",
       "major": "의예과",
       "quota": 4,
-      "applicants": 62,
-      "diff": 2,
-      "rate": 15.5,
-      "rate_str": "15.5 : 1",
+      "applicants": 63,
+      "diff": 1,
+      "rate": 15.8,
+      "rate_str": "15.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "15:30",
+      "latest_time": "16:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -6601,6 +6643,13 @@
           "datetime_label": "09-11 15:30",
           "applicants": 62,
           "rate": 15.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "16:00",
+          "datetime_label": "09-11 16:00",
+          "applicants": 63,
+          "rate": 15.8
         }
       ]
     },
