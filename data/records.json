@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 16:30",
+  "updated_at": "2026-09-11 17:00",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -2383,13 +2383,13 @@
       "admission": "지역인재종합전형(전북)",
       "major": "의약학 치의예과 (자연)",
       "quota": 18,
-      "applicants": 131,
-      "diff": 3,
-      "rate": 7.3,
-      "rate_str": "7.3 : 1",
+      "applicants": 135,
+      "diff": 4,
+      "rate": 7.5,
+      "rate_str": "7.5 : 1",
       "prev_year": "6.1 : 1",
-      "progress_pct": 119.7,
-      "latest_time": "16:30",
+      "progress_pct": 123.0,
+      "latest_time": "17:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3176,6 +3176,13 @@
           "datetime_label": "09-11 16:30",
           "applicants": 131,
           "rate": 7.3
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:00",
+          "datetime_label": "09-11 17:00",
+          "applicants": 135,
+          "rate": 7.5
         }
       ]
     },
@@ -5039,7 +5046,7 @@
       "rate_str": "9.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "16:30",
+      "latest_time": "17:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -5847,6 +5854,13 @@
           "datetime_label": "09-11 16:30",
           "applicants": 63,
           "rate": 9.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:00",
+          "datetime_label": "09-11 17:00",
+          "applicants": 63,
+          "rate": 9.0
         }
       ]
     },
@@ -5863,7 +5877,7 @@
       "rate_str": "15.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "16:30",
+      "latest_time": "17:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -6669,6 +6683,13 @@
           "date": "2026-09-11",
           "time": "16:30",
           "datetime_label": "09-11 16:30",
+          "applicants": 63,
+          "rate": 15.8
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:00",
+          "datetime_label": "09-11 17:00",
           "applicants": 63,
           "rate": 15.8
         }
