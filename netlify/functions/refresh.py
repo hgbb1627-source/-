@@ -385,7 +385,9 @@ def handler(event, context):
     univ_dict = {u["alias"]: u for u in fallback_data.get("universities", [])}
 
     # 2. 실시간 크롤링 수행
-    latest_time_str = fallback_data.get("updated_at", "10:00").split()[-1]
+    latest_combined = fallback_data.get("updated_at") or "0000-00-00 00:00"
+    if " " not in latest_combined:  # 예전 버전 데이터 호환(시:분만 저장된 경우)
+        latest_combined = f"{datetime.date.today().strftime('%Y-%m-%d')} {latest_combined}"
 
     for cfg in UNIV_CONFIGS:
         alias = cfg["alias"]
@@ -396,8 +398,9 @@ def handler(event, context):
             t_str = live_res["time"].strftime("%H:%M")
             d_str = live_res["date"].strftime("%Y-%m-%d")
 
-            if t_str > latest_time_str:
-                latest_time_str = t_str
+            cur_combined = f"{d_str} {t_str}"
+            if cur_combined > latest_combined:
+                latest_combined = cur_combined
 
             # 전년도 경쟁률 데이터가 없으면(예: "신설") 진행률을 계산하지 않고 None 처리
             progress_pct = None
@@ -458,7 +461,7 @@ def handler(event, context):
 
     today_str = datetime.date.today().strftime("%Y-%m-%d")
     response_payload = {
-        "updated_at": f"{today_str} {latest_time_str}",
+        "updated_at": latest_combined,
         "total_target_colleges": len(final_univs),
         "universities": final_univs,
         "live_refreshed": True

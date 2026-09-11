@@ -652,7 +652,9 @@ def export_records_json(fetched_list):
     # history를 이어받아 누적한다 (있으면).
     json_history_fallback = _load_existing_json_history() if wb is None else {}
 
-    latest_time_str = "00:00"
+    # 날짜까지 포함해서 비교해야 함 — "HH:MM" 문자열만 비교하면 어제 17:00이
+    # 오늘 09:10보다 "더 큰 문자"로 취급되어 상단 기준시각이 과거에 멈추는 버그가 생김
+    latest_combined = "0000-00-00 00:00"
     univ_data_list = []
 
     for item in fetched_list:
@@ -661,8 +663,9 @@ def export_records_json(fetched_list):
         sname = cfg["sheet"]
         cur_t_str = item["time"].strftime("%H:%M")
         cur_d_str = item["date"].strftime("%Y-%m-%d")
-        if cur_t_str > latest_time_str:
-            latest_time_str = cur_t_str
+        cur_combined = f"{cur_d_str} {cur_t_str}"
+        if cur_combined > latest_combined:
+            latest_combined = cur_combined
 
         history = []
         if wb is not None and sname in wb.sheetnames:
@@ -745,7 +748,7 @@ def export_records_json(fetched_list):
         })
 
     payload = {
-        "updated_at": f"{datetime.date.today().strftime('%Y-%m-%d')} {latest_time_str}",
+        "updated_at": latest_combined,
         "total_target_colleges": len(univ_data_list),
         "universities": univ_data_list
     }
@@ -764,11 +767,14 @@ def update_readme(fetched_list):
     with open(README_PATH, "r", encoding="utf-8") as f:
         content = f.read()
 
-    latest_time_str = "00:00"
+    latest_combined = "0000-00-00 00:00"
     for item in fetched_list:
         t_str = item["time"].strftime("%H:%M")
-        if t_str > latest_time_str:
-            latest_time_str = t_str
+        d_str = item["date"].strftime("%Y-%m-%d")
+        combined = f"{d_str} {t_str}"
+        if combined > latest_combined:
+            latest_combined = combined
+    latest_time_str = latest_combined.split()[-1]
 
     now_date_str = datetime.date.today().strftime("%Y-%m-%d")
 
