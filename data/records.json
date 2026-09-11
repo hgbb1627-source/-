@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 17:00",
+  "updated_at": "2026-09-11 09:20",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -9,13 +9,13 @@
       "admission": "학생부교과 지역의사선발전형-전주권",
       "major": "의예과",
       "quota": 9,
-      "applicants": 190,
+      "applicants": 191,
       "diff": 1,
-      "rate": 21.1,
-      "rate_str": "21.1 : 1",
+      "rate": 21.2,
+      "rate_str": "21.2 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -711,6 +711,13 @@
           "datetime_label": "09-11 09:10",
           "applicants": 190,
           "rate": 21.1
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
+          "applicants": 191,
+          "rate": 21.2
         }
       ]
     },
@@ -722,12 +729,12 @@
       "major": "의예과",
       "quota": 45,
       "applicants": 418,
-      "diff": 1,
+      "diff": 0,
       "rate": 9.3,
       "rate_str": "9.3 : 1",
       "prev_year": "10.0 : 1",
       "progress_pct": 93.0,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1400,6 +1407,13 @@
           "date": "2026-09-11",
           "time": "09:10",
           "datetime_label": "09-11 09:10",
+          "applicants": 418,
+          "rate": 9.3
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
           "applicants": 418,
           "rate": 9.3
         }
@@ -2146,12 +2160,12 @@
       "major": "의약학 치의예과 (자연)",
       "quota": 18,
       "applicants": 108,
-      "diff": 1,
+      "diff": 0,
       "rate": 6.0,
       "rate_str": "6.0 : 1",
       "prev_year": "6.1 : 1",
       "progress_pct": 98.4,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -2826,6 +2840,13 @@
           "datetime_label": "09-11 09:10",
           "applicants": 108,
           "rate": 6.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
+          "applicants": 108,
+          "rate": 6.0
         }
       ]
     },
@@ -3001,12 +3022,12 @@
       "major": "의예과",
       "quota": 4,
       "applicants": 62,
-      "diff": 1,
+      "diff": 0,
       "rate": 15.5,
       "rate_str": "15.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -3716,6 +3737,13 @@
           "datetime_label": "09-11 09:10",
           "applicants": 62,
           "rate": 15.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
+          "applicants": 62,
+          "rate": 15.5
         }
       ]
     },
@@ -3732,7 +3760,7 @@
       "rate_str": "18.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -4414,6 +4442,13 @@
           "datetime_label": "09-11 09:10",
           "applicants": 108,
           "rate": 18.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
+          "applicants": 108,
+          "rate": 18.0
         }
       ]
     },
@@ -4430,7 +4465,7 @@
       "rate_str": "7.1 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -5126,6 +5161,13 @@
           "datetime_label": "09-11 09:10",
           "applicants": 50,
           "rate": 7.1
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
+          "applicants": 50,
+          "rate": 7.1
         }
       ]
     },
@@ -5142,7 +5184,7 @@
       "rate_str": "12.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "09:10",
+      "latest_time": "09:20",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -5836,6 +5878,13 @@
           "date": "2026-09-11",
           "time": "09:10",
           "datetime_label": "09-11 09:10",
+          "applicants": 50,
+          "rate": 12.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "09:20",
+          "datetime_label": "09-11 09:20",
           "applicants": 50,
           "rate": 12.5
         }
