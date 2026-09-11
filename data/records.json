@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-11 17:00",
+  "updated_at": "2026-09-11 17:30",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -2383,13 +2383,13 @@
       "admission": "지역인재종합전형(전북)",
       "major": "의약학 치의예과 (자연)",
       "quota": 18,
-      "applicants": 135,
-      "diff": 4,
-      "rate": 7.5,
-      "rate_str": "7.5 : 1",
+      "applicants": 137,
+      "diff": 2,
+      "rate": 7.6,
+      "rate_str": "7.6 : 1",
       "prev_year": "6.1 : 1",
-      "progress_pct": 123.0,
-      "latest_time": "17:00",
+      "progress_pct": 124.6,
+      "latest_time": "17:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3183,6 +3183,13 @@
           "datetime_label": "09-11 17:00",
           "applicants": 135,
           "rate": 7.5
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:30",
+          "datetime_label": "09-11 17:30",
+          "applicants": 137,
+          "rate": 7.6
         }
       ]
     },
@@ -5040,13 +5047,13 @@
       "admission": "지역의사선발전형 진료권-전주권",
       "major": "의예과",
       "quota": 7,
-      "applicants": 63,
-      "diff": 0,
-      "rate": 9.0,
-      "rate_str": "9.0 : 1",
+      "applicants": 67,
+      "diff": 4,
+      "rate": 9.6,
+      "rate_str": "9.6 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "17:00",
+      "latest_time": "17:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -5861,6 +5868,13 @@
           "datetime_label": "09-11 17:00",
           "applicants": 63,
           "rate": 9.0
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:30",
+          "datetime_label": "09-11 17:30",
+          "applicants": 67,
+          "rate": 9.6
         }
       ]
     },
@@ -5871,13 +5885,13 @@
       "admission": "지역의사선발전형 진료권-광역권",
       "major": "의예과",
       "quota": 4,
-      "applicants": 63,
-      "diff": 0,
-      "rate": 15.8,
-      "rate_str": "15.8 : 1",
+      "applicants": 67,
+      "diff": 4,
+      "rate": 16.8,
+      "rate_str": "16.8 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "17:00",
+      "latest_time": "17:30",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -6692,6 +6706,13 @@
           "datetime_label": "09-11 17:00",
           "applicants": 63,
           "rate": 15.8
+        },
+        {
+          "date": "2026-09-11",
+          "time": "17:30",
+          "datetime_label": "09-11 17:30",
+          "applicants": 67,
+          "rate": 16.8
         }
       ]
     },
