@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-16 21:00",
+  "updated_at": "2026-09-16 22:00",
   "total_target_colleges": 11,
   "universities": [
     {
@@ -15,7 +15,7 @@
       "rate_str": "24.3 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -1012,6 +1012,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 219,
           "rate": 24.3
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 219,
+          "rate": 24.3
         }
       ]
     },
@@ -1028,7 +1035,7 @@
       "rate_str": "10.2 : 1",
       "prev_year": "10.0 : 1",
       "progress_pct": 102.0,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -2018,6 +2025,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 458,
           "rate": 10.2
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 458,
+          "rate": 10.2
         }
       ]
     },
@@ -2034,7 +2048,7 @@
       "rate_str": "35.2 : 1",
       "prev_year": "40.0 : 1",
       "progress_pct": 88.0,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -2884,6 +2898,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 564,
           "rate": 35.2
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 564,
+          "rate": 35.2
         }
       ]
     },
@@ -2900,7 +2921,7 @@
       "rate_str": "7.6 : 1",
       "prev_year": "6.1 : 1",
       "progress_pct": 124.6,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -3911,6 +3932,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 137,
           "rate": 7.6
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 137,
+          "rate": 7.6
         }
       ]
     },
@@ -3927,7 +3955,7 @@
       "rate_str": "30.6 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10920591.html",
       "is_placeholder": false,
       "history": [
@@ -4035,6 +4063,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 306,
           "rate": 30.6
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 306,
+          "rate": 30.6
         }
       ]
     },
@@ -4051,7 +4086,7 @@
       "rate_str": "36.9 : 1",
       "prev_year": "35.7 : 1",
       "progress_pct": 103.4,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio11650731.html",
       "is_placeholder": false,
       "history": [
@@ -4306,6 +4341,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 553,
           "rate": 36.9
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 553,
+          "rate": 36.9
         }
       ]
     },
@@ -4322,7 +4364,7 @@
       "rate_str": "17.5 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -5347,6 +5389,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 70,
           "rate": 17.5
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 70,
+          "rate": 17.5
         }
       ]
     },
@@ -5363,7 +5412,7 @@
       "rate_str": "24.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5KOldCL0pmJSY6Jko3ZlRm",
       "is_placeholder": false,
       "history": [
@@ -6360,6 +6409,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 144,
           "rate": 24.0
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 144,
+          "rate": 24.0
         }
       ]
     },
@@ -6376,7 +6432,7 @@
       "rate_str": "10.3 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -7408,6 +7464,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 72,
           "rate": 10.3
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 72,
+          "rate": 10.3
         }
       ]
     },
@@ -7424,7 +7487,7 @@
       "rate_str": "18.0 : 1",
       "prev_year": "신설",
       "progress_pct": null,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://ratio.uwayapply.com/Sl5Kclc4TjlXYU5KZiUmOiZKN2ZUZg==",
       "is_placeholder": false,
       "history": [
@@ -8456,6 +8519,13 @@
           "datetime_label": "09-16 21:00",
           "applicants": 72,
           "rate": 18.0
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
+          "applicants": 72,
+          "rate": 18.0
         }
       ]
     },
@@ -8472,7 +8542,7 @@
       "rate_str": "45.6 : 1",
       "prev_year": "50.0 : 1",
       "progress_pct": 91.2,
-      "latest_time": "21:00",
+      "latest_time": "22:00",
       "url": "https://addon.jinhakapply.com/RatioV1/RatioH/Ratio10190711.html",
       "is_placeholder": false,
       "history": [
@@ -9327,6 +9397,13 @@
           "date": "2026-09-16",
           "time": "21:00",
           "datetime_label": "09-16 21:00",
+          "applicants": 456,
+          "rate": 45.6
+        },
+        {
+          "date": "2026-09-16",
+          "time": "22:00",
+          "datetime_label": "09-16 22:00",
           "applicants": 456,
           "rate": 45.6
         }
